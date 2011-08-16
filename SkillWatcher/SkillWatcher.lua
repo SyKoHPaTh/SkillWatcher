@@ -267,6 +267,12 @@ SkillWatcherVersion = "v2.1a";
 			if skillText[1] == "Rich Saronite Deposit" then Horange = 425; Hyellow = 450; Hgreen = 451; Hgrey = 451; skillText[4] = "Saronite Ore, Crystallized Earth/Shadow";end
 			if skillText[1] == "Titanium Deposit" then Horange = 450; Hyellow = 451; Hgreen = 451; Hgrey = 451; skillText[4] = "Saronite Ore, Crystallized Earth/Fire/Water/Air";end
 			--Cataclysm
+			if skillText[1] == "Obsidium Deposit" then Horange = 425; Hyellow = 450; Hgreen = 475; Hgrey = 500; skillText[4] = "Obsidium Ore, Volatile Earth/Air";end
+			if skillText[1] == "Elementium Vein" then Horange = 475; Hyellow = 500; Hgreen = 525; Hgrey = 525; skillText[4] = "Elementium Ore, Volatile Earth/Air/FIre/Water";end
+			if skillText[1] == "Rich Elementium Vein" then Horange = 500; Hyellow = 525; Hgreen = 525; Hgrey = 525; skillText[4] = "Elementium Ore, Volatile Earth/Air/Fire/Water";end
+			if skillText[1] == "Pyrite Deposit" then Horange = 525; Hyellow = 525; Hgreen = 525; Hgrey = 525; skillText[4] = "Pyrite Ore, Volatile Fire/Air";end
+			if skillText[1] == "Rich Pyrite Deposit" then Horange = 525; Hyellow = 525; Hgreen = 525; Hgrey = 525; skillText[4] = "Pyrite Ore, Volatile Fire/Air";end
+
 
 			--====Herbalism====
 			--Old World
