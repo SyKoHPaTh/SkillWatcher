@@ -5,8 +5,8 @@
 -- ==========================
 
 --match these variables with versioning in the TOC file
-SkillWatcherGameVersion = "CATA 4.0.3a";
-SkillWatcherVersion = "v2.1a";
+SkillWatcherGameVersion = "PANDA 5.0.5a";
+SkillWatcherVersion = "v2.2";
 
 -- [[========================
 -- Path to file:  WoW/Interface/Addons/SkillWatcher
@@ -14,6 +14,7 @@ SkillWatcherVersion = "v2.1a";
 -- ==========================
 -- Version History
 --
+--		2.2 -	option to lock window to keep it from moving, add Cata and Panda nodes (mining/herbalism)
 --		2.1	-	option to turn off/on the tooltip window thing, bugfix ("Not found!" tooltip thing), bugfix (savedvariables not reading / event)
 --		2.0	-	Update to WRATH 4.0, Window size fix, added Prospecting mats tooltip stuff
 --		1.9b	-	Add to tracking: blacksmith and engineering skill for "locked", customizable skills shown through config window
@@ -33,7 +34,6 @@ SkillWatcherVersion = "v2.1a";
 -- = TO DO:
 --
 --		Replace color fading procedure with math function
---		table data for herbalism, mining
 --
 --		Config options
 --			Skin Selection
@@ -51,12 +51,11 @@ SkillWatcherVersion = "v2.1a";
 --	1.8	-	SkillWatcherConfig_TooltipMiningON, SkillWatcherConfig_TooltipHerbON, SkillWatcherConfig_WindowON
 --	1.9b-	SkillArray
 --	2.1	-	SkillWatcherConfig_TooltipON
+--	2.2 - 	SkillWatcherConfig_WindowMovable
 --
 --
 --
 --
---
-
 -- config options:
 --	turn mod on and off SkillWatcherFrame:Hide(); and Show();
 --	use skill window
@@ -74,6 +73,7 @@ SkillWatcherVersion = "v2.1a";
 		local SkillWatcherConfig_defaultPoint = "CENTER";
 		local SkillWatcherConfig_defaultX = 0;
 		local SkillWatcherConfig_defaultY = 0;
+		local SkillWatcherConfig_defaultWindowMovable = 1;
 		local SkillWatcherConfig_defaultWindowON = 1;
 		local SkillWatcherConfig_defaultWindowDetailON = 2;
 		local SkillWatcherConfig_defaultTooltipMiningON = 1;
@@ -123,31 +123,36 @@ SkillWatcherVersion = "v2.1a";
 			end
 
 			if msg == "debug" then
-				if (SkillWatcherConfig_WindowON) then
+				if (SkillWatcherConfig_WindowON == 1) then
 					DEFAULT_CHAT_FRAME:AddMessage("SkillWatcherConfig_WindowON: YES")
 				else
 					DEFAULT_CHAT_FRAME:AddMessage("SkillWatcherConfig_WindowON: NO")
 				end
-				if (SkillWatcherConfig_TooltipMiningON) then
+				if (SkillWatcherConfig_TooltipMiningON == 1) then
 					DEFAULT_CHAT_FRAME:AddMessage("SkillWatcherConfig_TooltipMiningON: YES")
 				else
 					DEFAULT_CHAT_FRAME:AddMessage("SkillWatcherConfig_TooltipMiningON: NO")
 				end
-				if (SkillWatcherConfig_TooltipHerbON) then
+				if (SkillWatcherConfig_TooltipHerbON == 1) then
 					DEFAULT_CHAT_FRAME:AddMessage("SkillWatcherConfig_TooltipHerbON: YES")
 				else
 					DEFAULT_CHAT_FRAME:AddMessage("SkillWatcherConfig_TooltipHerbON: NO")
 				end				
-				if (SkillWatcherConfig_DetailWindowON) then
+				if (SkillWatcherConfig_DetailWindowON == 1) then
 					DEFAULT_CHAT_FRAME:AddMessage("SkillWatcherConfig_DetailWindowON: YES")
 				else
 					DEFAULT_CHAT_FRAME:AddMessage("SkillWatcherConfig_DetailWindowON: NO")
 				end
-				if (SkillWatcherConfig_TooltipON) then
+				if (SkillWatcherConfig_TooltipON == 1) then
 					DEFAULT_CHAT_FRAME:AddMessage("SkillWatcherConfig_TooltipON: YES")
 				else
 					DEFAULT_CHAT_FRAME:AddMessage("SkillWatcherConfig_TooltipON: NO")
 				end	
+				if (SkillWatcherConfig_WindowMovable == 1) then
+					DEFAULT_CHAT_FRAME:AddMessage("SkillWatcherConfig_WindowMovable: YES")
+				else
+					DEFAULT_CHAT_FRAME:AddMessage("SkillWatcherConfig_WindowMovable: NO")
+				end
 			end
 			
 			if msg == "detail" then
@@ -267,12 +272,19 @@ SkillWatcherVersion = "v2.1a";
 			if skillText[1] == "Rich Saronite Deposit" then Horange = 425; Hyellow = 450; Hgreen = 451; Hgrey = 451; skillText[4] = "Saronite Ore, Crystallized Earth/Shadow";end
 			if skillText[1] == "Titanium Deposit" then Horange = 450; Hyellow = 451; Hgreen = 451; Hgrey = 451; skillText[4] = "Saronite Ore, Crystallized Earth/Fire/Water/Air";end
 			--Cataclysm
-			if skillText[1] == "Obsidium Deposit" then Horange = 425; Hyellow = 450; Hgreen = 475; Hgrey = 500; skillText[4] = "Obsidium Ore, Volatile Earth/Air";end
-			if skillText[1] == "Elementium Vein" then Horange = 475; Hyellow = 500; Hgreen = 525; Hgrey = 525; skillText[4] = "Elementium Ore, Volatile Earth/Air/FIre/Water";end
-			if skillText[1] == "Rich Elementium Vein" then Horange = 500; Hyellow = 525; Hgreen = 525; Hgrey = 525; skillText[4] = "Elementium Ore, Volatile Earth/Air/Fire/Water";end
-			if skillText[1] == "Pyrite Deposit" then Horange = 525; Hyellow = 525; Hgreen = 525; Hgrey = 525; skillText[4] = "Pyrite Ore, Volatile Fire/Air";end
-			if skillText[1] == "Rich Pyrite Deposit" then Horange = 525; Hyellow = 525; Hgreen = 525; Hgrey = 525; skillText[4] = "Pyrite Ore, Volatile Fire/Air";end
-
+			if skillText[1] == "Obsidium Deposit" then Horange = 425; Hyellow = 450; Hgreen = 475; Hgrey = 500; skillText[4] = "Obsidium Ore";end
+			if skillText[1] == "Rich Obsidium Deposit" then Horange = 450; Hyellow = 475; Hgreen = 500; Hgrey = 525; skillText[4] = "Obsidium Ore";end
+			if skillText[1] == "Elementium Vein" then Horange = 475; Hyellow = 500; Hgreen = 525; Hgrey = 525; skillText[4] = "Elementium Ore";end
+			if skillText[1] == "Rich Elementium Vein" then Horange = 500; Hyellow = 525; Hgreen = 475; Hgrey = 525; skillText[4] = "Elementium Ore";end
+			if skillText[1] == "Pyrite Deposit" then Horange = 525; Hyellow = 525; Hgreen = 525; Hgrey = 525; skillText[4] = "Pyrite Ore";end
+			if skillText[1] == "Rich Pyrite Deposit" then Horange = 525; Hyellow = 525; Hgreen = 525; Hgrey = 525; skillText[4] = "Pyrite Ore";end
+			--Pandaria
+			if skillText[1] == "Ghost Iron Deposit" then Horange = 500; Hyellow = 525; Hgreen = 550; Hgrey = 575; skillText[4] = "Ghost Iron Ore";end
+			if skillText[1] == "Rich Ghost Iron Deposit" then Horange = 550; Hyellow = 575; Hgreen = 600; Hgrey = 600; skillText[4] = "Ghost Iron Ore";end
+			if skillText[1] == "Kyparite Deposit" then Horange = 550; Hyellow = 575; Hgreen = 600; Hgrey = 600; skillText[4] = "Kyparite Ore";end
+			if skillText[1] == "Rich Kyparite Deposit" then Horange = 600; Hyellow = 600; Hgreen = 600; Hgrey = 600; skillText[4] = "Kyparite Ore";end
+			if skillText[1] == "Trillium Vein" then Horange = 600; Hyellow = 600; Hgreen = 600; Hgrey = 600; skillText[4] = "White or Black Trillium Ore";end
+			if skillText[1] == "Rich Trillium Vein" then Horange = 600; Hyellow = 600; Hgreen = 600; Hgrey = 600; skillText[4] = "White or Black Trillium Ore";end
 
 			--====Herbalism====
 			--Old World
@@ -327,6 +339,20 @@ SkillWatcherVersion = "v2.1a";
 			if skillText[1] == "Icethorn" then Horange = 435; Hyellow = 445; Hgreen = 450; Hgrey = 535; skillText[4] = "Icethorn, Crystallized Life, Frost Lotus"; end
 			if skillText[1] == "Frost Lotus" then Horange = 450; Hyellow = 451; Hgreen = 451; Hgrey = 550; skillText[4] = "Deadnettle, Crystallized Life, Frost Lotus"; end
 			--Cataclysm
+			if skillText[1] == "Cinderbloom" then Horange = 425; Hyellow = 450; Hgreen = 475; Hgrey = 500; skillText[4] = ""; end
+			if skillText[1] == "Stormvine" then Horange = 425; Hyellow = 450; Hgreen = 475; Hgrey = 500; skillText[4] = ""; end
+			if skillText[1] == "Azshara's Veil" then Horange = 425; Hyellow = 450; Hgreen = 475; Hgrey = 500; skillText[4] = ""; end
+			if skillText[1] == "Heartblossom" then Horange = 475; Hyellow = 500; Hgreen = 525; Hgrey = 525; skillText[4] = ""; end
+			if skillText[1] == "Whiptail" then Horange = 500; Hyellow = 525; Hgreen = 525; Hgrey = 525; skillText[4] = ""; end
+			if skillText[1] == "Twilight Jasmine" then Horange = 525; Hyellow = 525; Hgreen = 525; Hgrey = 525; skillText[4] = ""; end
+			--Pandaria
+			if skillText[1] == "Fool's Cap" then Horange = 600; Hyellow = 600; Hgreen = 600; Hgrey = 600; skillText[4] = ""; end
+			if skillText[1] == "Golden Lotus" then Horange = 550; Hyellow = 575; Hgreen = 600; Hgrey = 600; skillText[4] = ""; end
+			if skillText[1] == "Green Tea Leaf" then Horange = 500; Hyellow = 525; Hgreen = 550; Hgrey = 575; skillText[4] = ""; end
+			if skillText[1] == "Rain Poppy" then Horange = 525; Hyellow = 550; Hgreen = 575; Hgrey = 600; skillText[4] = ""; end
+			if skillText[1] == "Sha-Touched Herb" then Horange = 575; Hyellow = 600; Hgreen = 600; Hgrey = 600; skillText[4] = ""; end
+			if skillText[1] == "Silkweed" then Horange = 545; Hyellow = 550; Hgreen = 575; Hgrey = 600; skillText[4] = ""; end
+			if skillText[1] == "Snow Lily" then Horange = 575; Hyellow = 600; Hgreen = 600; Hgrey = 600; skillText[4] = ""; end
 
 			--====Rogue Lockpick====
 			--Old World
@@ -408,12 +434,13 @@ SkillWatcherVersion = "v2.1a";
 			if skillText[1] == "Kharazhan Door" then Horange = 350; Hyellow = 375; Hgreen = 400; Hgrey = 450; skillText[4] = ""; end
 			if skillText[1] == "Violet Hold Door" then Horange = 365; Hyellow = 400; Hgreen = 450; Hgrey = 450; skillText[4] = ""; end
 			--Cataclysm
+			--Pandaria
 			
 
 			--Read "require" off node
 			if skillText[2] == "Requires Herbalism" then
 				--herbalism
-				if GetSkillValue("Herbalism") < 450 then 
+				if GetSkillValue("Herbalism") < 600 then 
 					skillText[3] = "Skill:" .. GetSkillValue("Herbalism") .. " (" .. Horange .. "-" .. Hgrey .. ")"
 				else
 					--hide the skill line of text if at maximum skill
@@ -429,7 +456,7 @@ SkillWatcherVersion = "v2.1a";
 
 			elseif skillText[2] == "Requires Mining" then
 				--mining
-				if GetSkillValue("Mining") < 450 then 
+				if GetSkillValue("Mining") < 600 then 
 					skillText[3] = "Skill:" .. GetSkillValue("Mining").. " (" ..  Horange .. "-" .. Hgrey .. ")"
 				else
 					--hide the skill line of text if at maximum skill
@@ -444,7 +471,7 @@ SkillWatcherVersion = "v2.1a";
 				if GetSkillValue("Mining") < Horange then chance = 101; end
 			elseif skillText[2] == "Locked" and Hgrey and Horange then
 				--lockpicking
-				if GetSkillValue("Lockpicking") < 450 then
+				if GetSkillValue("Lockpicking") < 600 then
 					skillText[3] = "Skill:" .. GetSkillValue("Lockpicking").. " (" ..  Horange .. "-" .. Hgrey .. ")"
 				else
 					--hide the skill line of text if at maximum skill
@@ -604,6 +631,13 @@ SkillWatcherVersion = "v2.1a";
 			else
 				SkillWatcherConfig_TooltipON = 2
 			end
+
+			if WindowMovableCheckButton:GetChecked() == 1 then
+				--show checkmark to lock it
+				SkillWatcherConfig_WindowMovable = 2
+			else
+				SkillWatcherConfig_WindowMovable = 1
+			end
 		end
 
 		SkillWatcher.panel.cancel = function(self) 
@@ -633,6 +667,13 @@ SkillWatcherVersion = "v2.1a";
 			else
 				TooltipCheckButton:SetChecked(0)
 			end
+
+			if SkillWatcherConfig_WindowMovable == 1 then
+				WindowMovableCheckButton:SetChecked(0)
+			else
+				WindowMovableCheckButton:SetChecked(1)
+			end
+
 		end
 		SkillWatcher.panel.default = function(self) 
 			--self.originalValue = DEFAULT VALUE
@@ -641,7 +682,8 @@ SkillWatcherVersion = "v2.1a";
 			SkillWatcherConfig_TooltipMiningON = SkillWatcherConfig_defaultTooltipMiningON
 			SkillWatcherConfig_TooltipHerbON = SkillWatcherConfig_defaultTooltipHerbON
 			SkillWatcherConfig_TooltipON = SkillWatcherConfig_defaultTooltipON
-			
+			SkillWatcherConfig_WindowMovable = SkillWatcherConfig_defaultWindowMovable
+
 			if SkillWatcherConfig_defaultTest == 1 then
 				TestCheckButton:SetChecked(1)
 			else
@@ -668,6 +710,11 @@ SkillWatcherVersion = "v2.1a";
 			else
 				TooltipCheckButton:SetChecked(0)
 			end	
+			if SkillWatcherConfig_WindowMovable == 1 then
+				WindowMovableCheckButton:SetChecked(0)
+			else
+				WindowMovableCheckButton:SetChecked(1)
+			end
 		end
 		
 		-- Add the panel to the Interface Options
@@ -782,6 +829,36 @@ SkillWatcherVersion = "v2.1a";
 		else
 			TooltipCheckButton:SetChecked(0)
 		end
+
+		--make a button to show/hide the config window for specific skills
+		DetailWindowButton = CreateFrame("Button", "DetailWindowButton", SkillWatcher.panel, "UIPanelButtonTemplate");
+		DetailWindowButton:SetWidth(250)
+		DetailWindowButton:SetHeight(22)
+		DetailWindowButton:SetText("Select Skills to AUTO/SHOW/HIDE")
+		DetailWindowButton:SetPoint("CENTER",0 ,0)
+		DetailWindowButton:SetScript("OnClick", function() if SkillWatcherConfig_DetailWindowON == 1 then SkillWatcherConfig_DetailWindowON = 0 else SkillWatcherConfig_DetailWindowON = 1; end; end)
+		DetailWindowButton:SetAlpha(1)
+		DetailWindowButton:Show()
+
+		--make a checkbutton - use tooltip for toggling the tooltip window
+		WindowMovableCheckButton = CreateFrame("CheckButton", "TestCheckButton", SkillWatcher.panel, "OptionsCheckButtonTemplate")
+		WindowMovableCheckButton:SetWidth("25")
+		WindowMovableCheckButton:SetHeight("25")
+		WindowMovableCheckButton:SetPoint("TOPLEFT", 16, -175)
+		WindowMovableCheckButton:SetNormalTexture("Interface\\Buttons\\UI-CheckBox-Up")
+		WindowMovableCheckButton:SetPushedTexture("Interface\\Buttons\\UI-CheckBox-Down")
+		WindowMovableCheckButton:SetHighlightTexture("Interface\\Buttons\\UI-CheckBox-Highlight", "ADD")
+		WindowMovableCheckButton:SetCheckedTexture("Interface\\Buttons\\UI-CheckBox-Check")
+		WindowMovableCheckButton:Show()
+		--text
+		SkillWatcherFrame.textSub = SkillWatcher.panel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+		SkillWatcherFrame.textSub:SetPoint("TOPLEFT", 45, -181)
+		SkillWatcherFrame.textSub:SetText("Lock the SkillWatcher window")
+		if SkillWatcherConfig_WindowMovable == 1 then
+			WindowMovableCheckButton:SetChecked(0)
+		else
+			WindowMovableCheckButton:SetChecked(1)
+		end
 		
 		--	turn mod on and off SkillWatcherFrame:Hide(); and Show();
 		--	replace tooltip
@@ -835,6 +912,10 @@ SkillWatcherVersion = "v2.1a";
 				DEFAULT_CHAT_FRAME:AddMessage("Detail - default")
 				SkillWatcherConfig_DetailWindowON = SkillWatcherConfig_defaultWindowDetailON
 			end
+			if SkillWatcherConfig_WindowMovable ~= 1 and SkillWatcherConfig_WindowMovable ~= 2 then
+				DEFAULT_CHAT_FRAME:AddMessage("Move Window - default")
+				SkillWatcherConfig_WindowMovable = SkillWatcherConfig_defaultWindowMovable
+			end			
 			
 			-- flag the buttons
 			if SkillWatcherConfig_TooltipMiningON == 1 then
@@ -856,6 +937,11 @@ SkillWatcherVersion = "v2.1a";
 				WindowCheckButton:SetChecked(1)
 			else
 				WindowCheckButton:SetChecked(0)
+			end
+			if SkillWatcherConfig_WindowMovable == 1 then
+				WindowMovableCheckButton:SetChecked(0)
+			else
+				WindowMovableCheckButton:SetChecked(1)
 			end
 		DEFAULT_CHAT_FRAME:AddMessage(" Skillwatcher variables loaded and set!")
 	end
@@ -897,7 +983,7 @@ SkillWatcherVersion = "v2.1a";
 			
 			-- ==== Frame Dragging ====
 				--when user drags the frame, same the location of the window to the variables marked for saving
-			SkillWatcherFrame:SetScript("OnMouseDown", function() SkillWatcherFrame:StartMoving(); end)
+			SkillWatcherFrame:SetScript("OnMouseDown", function() if SkillWatcherConfig_WindowMovable == 1 then SkillWatcherFrame:StartMoving(); end; end)
 			SkillWatcherFrame:SetScript("OnMouseUp", function() SkillWatcherFrame:StopMovingOrSizing();
 			SkillWatcherPoint, relativeTo, relativePoint, SkillWatcherX, SkillWatcherY = SkillWatcherFrame:GetPoint(); end)
 
