@@ -2,6 +2,9 @@ SkillWatcher is an addon that shows a small on-screen window that displays all y
 
 Also, SkillWatcher replaces the tooltip for herb and mining nodes, showing the skill range to get a point, as well as common drops. Even better, for people with unlocking skills (Rogues, Blacksmith (key), Engineer (bomb)), the tooltip shows what skill level (or item) is required to unlock the door/chest/whatever.
 
+Version 2.2: Updated for Pandaria. Added all mining/herbalism nodes for Cataclysm and Pandaria. Added ability to lock window (options).
+	- Skill coloring requirements may not be accurate beyond initial (red->orange).
+
 Version 2.1: Added option to turn off/on the tooltip window thing. Fixed Bugs: "Not Found", Savedvariables (they save on logout and are read back in properly now)
 
 Version 2.0: Updated for Cataclysm. This tracks only profession 1, profession 2, archaeology, fishing, cooking, and first aid.
