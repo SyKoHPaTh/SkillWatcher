@@ -1,18 +1,17 @@
-## Interface: 50001
+## Interface: 50400
 ## To find build number, /run print((select(4, GetBuildInfo()))); in the game, and should print the version # to your chat frame
 ## 1 = version, 2 = build, 3 = date, 4 = tocversion number
 
-## Version: 2.2
+## Version: 2.3
 ## must be identical to .lua version
 
 ## Title: SkillWatcher
 
 ## Notes: This simply watches skills!
 
-## Author: SyKoHPaTh - Niwaurushi on Emerald Dream
+## Author: SyKoHPaTh - Niwaurushi on Sargeras
 ## eMail: sykohpath@gmail.com
-## More ideas: Ateo/Grauader on Emerald Dream
-## Testers: Ateo/Grauader, Ruber on Emerald Dream
+## More ideas: Ateo/Grauader on Sargeras
 
 ## SavedVariablesPerCharacter: SkillWatcherPoint, SkillWatcherX, SkillWatcherY, SkillWatcherConfig_TooltipMiningON, SkillWatcherConfig_TooltipHerbON, SkillWatcherConfig_WindowON, SkillArray, SkillWatcherConfig_TooltipON, SkillWatcherConfig_WindowMovable
 

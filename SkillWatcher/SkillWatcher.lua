@@ -5,8 +5,8 @@
 -- ==========================
 
 --match these variables with versioning in the TOC file
-SkillWatcherGameVersion = "PANDA 5.0.5a";
-SkillWatcherVersion = "v2.2";
+SkillWatcherGameVersion = "PANDA 5.4.2";
+SkillWatcherVersion = "v2.3";
 
 -- [[========================
 -- Path to file:  WoW/Interface/Addons/SkillWatcher
@@ -14,11 +14,15 @@ SkillWatcherVersion = "v2.2";
 -- ==========================
 -- Version History
 --
+--		2.3 -	updated lockbox info because I wanted to play rogue for 2 minutes
+--			-	updated levelup coloring through Pandaria (600)
+--			-	if profession is max at capped, show yellow instead of hiding.  Still hide if at XPAC max (600 Pandaria)
+--			-	removed that empty line from the display window (finally!!)
 --		2.2 -	option to lock window to keep it from moving, add Cata and Panda nodes (mining/herbalism)
 --		2.1	-	option to turn off/on the tooltip window thing, bugfix ("Not found!" tooltip thing), bugfix (savedvariables not reading / event)
 --		2.0	-	Update to WRATH 4.0, Window size fix, added Prospecting mats tooltip stuff
---		1.9b	-	Add to tracking: blacksmith and engineering skill for "locked", customizable skills shown through config window
---		1.9a	-	Update to WRATH 3.3.2, added Rogue skill tracking for lockpicking: chests, doors, loot, etc.
+--		1.9b-	Add to tracking: blacksmith and engineering skill for "locked", customizable skills shown through config window
+--		1.9a-	Update to WRATH 3.3.2, added Rogue skill tracking for lockpicking: chests, doors, loot, etc.
 --		1.9	-	added training notifiers
 --		1.8 -	config window
 --		1.7	-	Updated version to WRATH 3.2.0; fixed "long line" bug with long skill names
@@ -359,20 +363,19 @@ SkillWatcherVersion = "v2.2";
 				--crafted
 			if skillText[1] == "Practice Lock" then Horange = 1; Hyellow = 30; Hgreen = 60; Hgrey = 80; skillText[4] = "Nothing :("; end
 				--junkboxes
-			if skillText[1] == "Battered Junkbox" then Horange = 1; Hyellow = 30; Hgreen = 75; Hgrey = 105; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Worn Junkbox" then Horange = 75; Hyellow = 100; Hgreen = 120; Hgrey = 170; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Sturdy Junkbox" then Horange = 175; Hyellow = 200; Hgreen = 225; Hgrey = 225; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Heavy Junkbox" then Horange = 250; Hyellow = 275; Hgreen = 300; Hgrey = 350; skillText[4] = "(stuff)"; end
-				-- lockboxes (mob drops)
-			if skillText[1] == "Ornate Bronze Lockbox" then Horange = 1; Hyellow = 1; Hgreen = 50; Hgrey = 105; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Heavy Bronze Lockbox" then Horange = 25; Hyellow = 50; Hgreen = 75; Hgrey = 125; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Iron Lockbox" then Horange = 70; Hyellow = 95; Hgreen = 120; Hgrey = 170; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Strong Iron Lockbox" then Horange = 125; Hyellow = 150; Hgreen = 175; Hgrey = 225; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Steel Lockbox" then Horange = 175; Hyellow = 205; Hgreen = 225; Hgrey = 275; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Reinforced Lockbox" then Horange = 225; Hyellow = 250; Hgreen = 275; Hgrey = 325; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Mithril Lockbox" then Horange = 225; Hyellow = 250; Hgreen = 275; Hgrey = 325; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Thorium Lockbox" then Horange = 225; Hyellow = 250; Hgreen = 275; Hgrey = 325; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Froststeel Lockbox" then Horange = 375; Hyellow = 450; Hgreen = 450; Hgrey = 450; skillText[4] = "(stuff)"; end
+			if skillText[1] == "Battered Junkbox" then Horange = 1; Hyellow = 30; Hgreen = 75; Hgrey = 20; skillText[4] = "(stuff)"; end
+			if skillText[1] == "Worn Junkbox" then Horange = 75; Hyellow = 100; Hgreen = 120; Hgrey = 20; skillText[4] = "(stuff)"; end
+			if skillText[1] == "Sturdy Junkbox" then Horange = 175; Hyellow = 200; Hgreen = 225; Hgrey = 35; skillText[4] = "(stuff)"; end
+			if skillText[1] == "Heavy Junkbox" then Horange = 250; Hyellow = 275; Hgreen = 300; Hgrey = 50; skillText[4] = "(stuff)"; end
+				-- lockboxes (mob drops) - Hgrey is required player level!
+			if skillText[1] == "Ornate Bronze Lockbox" then Horange = 1; Hyellow = 1; Hgreen = 50; Hgrey = 20; skillText[4] = "(stuff)"; end
+			if skillText[1] == "Heavy Bronze Lockbox" then Horange = 25; Hyellow = 50; Hgreen = 75; Hgrey = 20; skillText[4] = "(stuff)"; end
+			if skillText[1] == "Iron Lockbox" then Horange = 70; Hyellow = 95; Hgreen = 120; Hgrey = 20; skillText[4] = "(stuff)"; end
+			if skillText[1] == "Strong Iron Lockbox" then Horange = 125; Hyellow = 150; Hgreen = 175; Hgrey = 25; skillText[4] = "(stuff)"; end
+			if skillText[1] == "Steel Lockbox" then Horange = 175; Hyellow = 205; Hgreen = 225; Hgrey = 35; skillText[4] = "(stuff)"; end
+			if skillText[1] == "Reinforced Steel Lockbox" then Horange = 225; Hyellow = 250; Hgreen = 275; Hgrey = 45; skillText[4] = "(stuff)"; end
+			if skillText[1] == "Mithril Lockbox" then Horange = 225; Hyellow = 250; Hgreen = 275; Hgrey = 50; skillText[4] = "(stuff)"; end
+			if skillText[1] == "Thorium Lockbox" then Horange = 225; Hyellow = 250; Hgreen = 275; Hgrey = 50; skillText[4] = "(stuff)"; end
 				--locked chests (fishing)
 			if skillText[1] == "Lockbox" then Horange = 1; Hyellow = 300; Hgreen = 300; Hgrey = 300; skillText[4] = "(stuff)"; end
 			if skillText[1] == "Lockbox" then Horange = 70; Hyellow = 300; Hgreen = 300; Hgrey = 300; skillText[4] = "(stuff)"; end
@@ -413,10 +416,10 @@ SkillWatcherVersion = "v2.2";
 			if skillText[1] == "Crescent Door" then Horange = 300; Hyellow = 325; Hgreen = 400; Hgrey = 400; skillText[4] = ""; end
 			--Outlands
 				--junkboxes
-			if skillText[1] == "Strong Junkbox" then Horange = 300; Hyellow = 325; Hgreen = 350; Hgrey = 400; skillText[4] = "(stuff)"; end
+			if skillText[1] == "Strong Junkbox" then Horange = 300; Hyellow = 325; Hgreen = 350; Hgrey = 60; skillText[4] = "(stuff)"; end
 				--lockboxes (mob drops)
-			if skillText[1] == "Eternium Lockbox" then Horange = 225; Hyellow = 265; Hgreen = 320; Hgrey = 325; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Khorium Lockbox" then Horange = 325; Hyellow = 350; Hgreen = 450; Hgrey = 450; skillText[4] = "(stuff)"; end
+			if skillText[1] == "Eternium Lockbox" then Horange = 225; Hyellow = 265; Hgreen = 320; Hgrey = 50; skillText[4] = "(stuff)"; end
+			if skillText[1] == "Khorium Lockbox" then Horange = 325; Hyellow = 350; Hgreen = 450; Hgrey = 65; skillText[4] = "(stuff)"; end
 				--treasure chests
 			if skillText[1] == "Bound Fel Iron Chest" then Horange = 300; Hyellow = 325; Hgreen = 350; Hgrey = 400; skillText[4] = "(stuff)"; end
 			if skillText[1] == "Bound Adamantite Chest" then Horange = 325; Hyellow = 350; Hgreen = 375; Hgrey = 450; skillText[4] = "(stuff)"; end
@@ -427,14 +430,24 @@ SkillWatcherVersion = "v2.2";
 			if skillText[1] == "Arcatraz Door" then Horange = 350; Hyellow = 375; Hgreen = 400; Hgrey = 450; skillText[4] = ""; end
 			--Northrend
 				--junkboxes
-			if skillText[1] == "Reinforced Junkbox" then Horange = 350; Hyellow = 375; Hgreen = 450; Hgrey = 450; skillText[4] = "(stuff)"; end
+			if skillText[1] == "Reinforced Junkbox" then Horange = 350; Hyellow = 375; Hgreen = 450; Hgrey = 70; skillText[4] = "(stuff)"; end
 				--lockboxes (mob drops)
-			if skillText[1] == "Titanium Lockbox" then Horange = 400; Hyellow = 450; Hgreen = 450; Hgrey = 450; skillText[4] = "(stuff)"; end
+			if skillText[1] == "Froststeel Lockbox" then Horange = 375; Hyellow = 450; Hgreen = 450; Hgrey = 75; skillText[4] = "(stuff)"; end
+			if skillText[1] == "Titanium Lockbox" then Horange = 400; Hyellow = 450; Hgreen = 450; Hgrey = 80; skillText[4] = "(stuff)"; end
+			if skillText[1] == "Tiny Titanium Lockbox" then Horange = 400; Hyellow = 450; Hgreen = 450; Hgrey = 80; skillText[4] = "(stuff)"; end
 				--doors
 			if skillText[1] == "Kharazhan Door" then Horange = 350; Hyellow = 375; Hgreen = 400; Hgrey = 450; skillText[4] = ""; end
 			if skillText[1] == "Violet Hold Door" then Horange = 365; Hyellow = 400; Hgreen = 450; Hgrey = 450; skillText[4] = ""; end
 			--Cataclysm
+				--junkboxes
+			if skillText[1] == "FLame-Scarred Junkbox" then Horange = 350; Hyellow = 375; Hgreen = 450; Hgrey = 80; skillText[4] = "(stuff)"; end
+				--lockboxes (mob drops)
+			if skillText[1] == "Elementium Lockbox" then Horange = 425; Hyellow = 450; Hgreen = 450; Hgrey = 85; skillText[4] = "(stuff)"; end
 			--Pandaria
+				--junkboxes
+			if skillText[1] == "Vine-Cracked Junkbox" then Horange = 350; Hyellow = 375; Hgreen = 450; Hgrey = 90; skillText[4] = "(stuff)"; end
+				--lockboxes (mob drops)
+			if skillText[1] == "Ghost Iron Lockbox" then Horange = 450; Hyellow = 450; Hgreen = 450; Hgrey = 90; skillText[4] = "(stuff)"; end
 			
 
 			--Read "require" off node
@@ -472,18 +485,15 @@ SkillWatcherVersion = "v2.2";
 			elseif skillText[2] == "Locked" and Hgrey and Horange then
 				--lockpicking
 				if GetSkillValue("Lockpicking") < 600 then
-					skillText[3] = "Skill:" .. GetSkillValue("Lockpicking").. " (" ..  Horange .. "-" .. Hgrey .. ")"
+					skillText[3] = "Level:" .. GetSkillValue("Lockpicking") .. " (Required: " ..  Hgrey .. ")"
 				else
 					--hide the skill line of text if at maximum skill
 					skillText[3] = "NONE"
 				end
 				--determine node "difficulty"
 				chance = 101  --can't harvest
-				if GetSkillValue("Lockpicking") >= Horange then chance = 100; end
-				if GetSkillValue("Lockpicking") >= Hyellow then chance = 75; end
-				if GetSkillValue("Lockpicking") >= Hgreen then chance = 50; end
 				if GetSkillValue("Lockpicking") >= Hgrey then chance = 0; end
-				if GetSkillValue("Lockpicking") < Horange then chance = 101; end
+				if GetSkillValue("Lockpicking") < Hgrey then chance = 101; end
 				--Handle professions that effect this skill: Blacksmithing, Engineering
 				if GetSkillValue("Engineering") > 1 then
 					if Horange < 150 then skillText[4] = "Use [Small Seaforium Charge]"; end
@@ -1027,8 +1037,6 @@ SkillWatcherVersion = "v2.2";
 			SkillWatcherFrameDetails:EnableMouse(true)
 			SkillWatcherFrameDetails:SetUserPlaced(true)
 			
-			SkillWatcherFrameDetails:SetHeight(0)
-
 			-- ==== Text within Frame ====
 
 			SkillWatcherFrameDetails.text = SkillWatcherFrameDetails:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
@@ -1047,7 +1055,7 @@ SkillWatcherVersion = "v2.2";
 			--loop through and display all the things
 						
 			textThing = "|c00ffffff Click on a skill to AUTO/SHOW/HIDE |r\n";
-			frameHeight = 28;
+			frameHeight = 0;
 			
 			--setup us the professions
 				--bad programmer doesn't put this into a function
@@ -1097,9 +1105,9 @@ SkillWatcherVersion = "v2.2";
 							["show"] = 1
 							};
 					end
-				frameHeight = frameHeight + 12
-				--Format text line for info window
-				textThing = textThing .. "|cffffd000|H" .. skillName .. "|h["..skillName.."]|h|r \n"
+					frameHeight = frameHeight + 12
+					--Format text line for info window
+					textThing = textThing .. "|cffffd000|H" .. skillName .. "|h["..skillName.."]|h|r \n"
 				end
 			end		
 				
@@ -1169,7 +1177,7 @@ SkillWatcherVersion = "v2.2";
 	
 	
 		textThing = ""
-		frameHeight = 11
+		frameHeight = 0
 		
 		--number of skills on character
 		local prof1, prof2, archaeology, fishing, cooking, firstAid = GetProfessions();
@@ -1222,11 +1230,10 @@ SkillWatcherVersion = "v2.2";
 			
 					
 			--display only skills not at 0 or maxed
-			if (GetSkillValue(skillName) > 0 and GetSkillValue(skillName) < GetSkillMaxValue(skillName)) or SkillArray[skillName].show == 2 or SkillWatcherConfig_DetailWindowON == 1 then
+			if (GetSkillValue(skillName) > 0 and GetSkillValue(skillName) < 600) or SkillArray[skillName].show == 2 or SkillWatcherConfig_DetailWindowON == 1 then
 			
 				
 				-- notifier instafix
-				
 				if SkillArray[skillName].color == "ff00ff00" then SkillArray[skillName].color = "ffffffff"; end
 				
 				-- Training notifier
@@ -1234,6 +1241,15 @@ SkillWatcherVersion = "v2.2";
 				if SkillArray[skillName].max == 150 and SkillArray[skillName].current > 125 then SkillArray[skillName].color = "ff00ff00"; end
 				if SkillArray[skillName].max == 225 and SkillArray[skillName].current > 200 then SkillArray[skillName].color = "ff00ff00"; end
 				if SkillArray[skillName].max == 300 and SkillArray[skillName].current > 275 then SkillArray[skillName].color = "ff00ff00"; end
+				if SkillArray[skillName].max == 375 and SkillArray[skillName].current > 350 then SkillArray[skillName].color = "ff00ff00"; end
+				if SkillArray[skillName].max == 450 and SkillArray[skillName].current > 425 then SkillArray[skillName].color = "ff00ff00"; end
+				if SkillArray[skillName].max == 525 and SkillArray[skillName].current > 500 then SkillArray[skillName].color = "ff00ff00"; end
+				--if SkillArray[skillName].max == 600 and SkillArray[skillName].current > 575 then SkillArray[skillName].color = "ff00ff00"; end
+
+				-- capped notified (less than expansion max)
+				if(GetSkillValue(skillName) == GetSkillMaxValue(skillName)) then
+					SkillArray[skillName].color = "00ffff00";
+				end
 				
 				--Really bad method to handle color fading
 				if SkillArray[skillName].color == "fffff8f8" then SkillArray[skillName].color = "ffffffff"; end				
@@ -1326,6 +1342,9 @@ SkillWatcherVersion = "v2.2";
 	function GetSkillValue(skill)
 		if not skill then
 			return 0
+		end
+		if skill=='Lockpicking' then
+			return UnitLevel("player");
 		end
 		local prof1, prof2, archaeology, fishing, cooking, firstAid = GetProfessions();
 		for i=1, 6 do
