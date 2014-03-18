@@ -1066,34 +1066,28 @@ SkillWatcherVersion = "v2.3";
 			for i=1, 6 do
 				skillName = ""
 				if i == 1 and prof1 then
-					local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(prof1)
+					local name, icon, skillLevel, maxSkillLevel, numAbilities, offset, line, modifier, specialIndex, specialOffset = GetProfessionInfo(prof1)
 					skillName = name
-					skillID = firstAid
 				end
 				if i == 2 and prof2 then
-					local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(prof2)
+					local name, icon, skillLevel, maxSkillLevel, numAbilities, offset, line, modifier, specialIndex, specialOffset = GetProfessionInfo(prof2)
 					skillName = name
-					skillID = firstAid
 				end
 				if i == 3 and archaeology then
-					local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(archaeology)
+					local name, icon, skillLevel, maxSkillLevel, numAbilities, offset, line, modifier, specialIndex, specialOffset = GetProfessionInfo(archaeology)
 					skillName = name
-					skillID = firstAid
 				end
 				if i == 4 and fishing then
-					local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(fishing)
+					local name, icon, skillLevel, maxSkillLevel, numAbilities, offset, line, modifier, specialIndex, specialOffset = GetProfessionInfo(fishing)
 					skillName = name
-					skillID = firstAid
 				end
 				if i == 5 and cooking then
-					local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(cooking)
+					local name, icon, skillLevel, maxSkillLevel, numAbilities, offset, line, modifier, specialIndex, specialOffset = GetProfessionInfo(cooking)
 					skillName = name
-					skillID = firstAid
 				end
 				if i == 6 and firstAid then
-					local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(firstAid)
+					local name, icon, skillLevel, maxSkillLevel, numAbilities, offset, line, modifier, specialIndex, specialOffset = GetProfessionInfo(firstAid)
 					skillName = name
-					skillID = firstAid
 				end
 
 				if skillName ~= "" then
@@ -1189,32 +1183,26 @@ SkillWatcherVersion = "v2.3";
 			if i == 1 and prof1 then
 				local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(prof1)
 				skillName = name
-				skillID = firstAid
 			end
 			if i == 2 and prof2 then
 				local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(prof2)
 				skillName = name
-				skillID = firstAid
 			end
 			if i == 3 and archaeology then
 				local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(archaeology)
 				skillName = name
-				skillID = firstAid
 			end
 			if i == 4 and fishing then
 				local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(fishing)
 				skillName = name
-				skillID = firstAid
 			end
 			if i == 5 and cooking then
 				local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(cooking)
 				skillName = name
-				skillID = firstAid
 			end
 			if i == 6 and firstAid then
 				local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(firstAid)
 				skillName = name
-				skillID = firstAid
 			end
 
 			if skillName ~= "" then
@@ -1222,14 +1210,14 @@ SkillWatcherVersion = "v2.3";
 				if not (SkillArray[skillName]) then
 					--table for holding skill levels
 					SkillArray[skillName] = {
-						["current"] = GetSkillValue(skillName),
-						["max"] = GetSkillMaxValue(skillName),
+						["current"] = skillLevel,
+						["max"] = maxSkillLevel,
 						["old"] = 0,
 						["color"] = "00ffffff",
 						["show"] = 1
 						};
 				end
-				--textThing = textThing .. skillID .. " " .. name .. " " .. skillLevel .. " " .. maxSkillLevel .. " " .. numAbilities .. " " .. return6 .. " " .. return7 .. "|r\n"
+				--textThing = textThing .. " " .. name .. " " .. skillLevel .. " " .. maxSkillLevel .. " " .. numAbilities .. " " .. return6 .. " " .. return7 .. "|r\n"
 			
 					
 			--display only skills not at 0 or maxed
