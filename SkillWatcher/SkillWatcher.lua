@@ -18,6 +18,8 @@ SkillWatcherVersion = "v2.3";
 --			-	updated levelup coloring through Pandaria (600)
 --			-	if profession is max at capped, show yellow instead of hiding.  Still hide if at XPAC max (600 Pandaria)
 --			-	removed that empty line from the display window (finally!!)
+--			-	MAXSKILL variable, just make it easier to update
+--			-	When skill ready to be "trained", show the level required to train it - THIS IS GUESS sorta
 --		2.2 -	option to lock window to keep it from moving, add Cata and Panda nodes (mining/herbalism)
 --		2.1	-	option to turn off/on the tooltip window thing, bugfix ("Not found!" tooltip thing), bugfix (savedvariables not reading / event)
 --		2.0	-	Update to WRATH 4.0, Window size fix, added Prospecting mats tooltip stuff
@@ -82,7 +84,8 @@ SkillWatcherVersion = "v2.3";
 		local SkillWatcherConfig_defaultWindowDetailON = 2;
 		local SkillWatcherConfig_defaultTooltipMiningON = 1;
 		local SkillWatcherConfig_defaultTooltipHerbON = 1;		
-		local SkillWatcherConfig_defaultTooltipON = 1;		
+		local SkillWatcherConfig_defaultTooltipON = 1;
+		local MAXSKILL = 600; --Pandaria, changing it here doesn't change it *everywhere*
 
 	-- ==== Slash Command ====
 		SLASH_SKILLWATCHER1 = "/skillwatcher";
@@ -453,7 +456,7 @@ SkillWatcherVersion = "v2.3";
 			--Read "require" off node
 			if skillText[2] == "Requires Herbalism" then
 				--herbalism
-				if GetSkillValue("Herbalism") < 600 then 
+				if GetSkillValue("Herbalism") < MAXSKILL then 
 					skillText[3] = "Skill:" .. GetSkillValue("Herbalism") .. " (" .. Horange .. "-" .. Hgrey .. ")"
 				else
 					--hide the skill line of text if at maximum skill
@@ -469,7 +472,7 @@ SkillWatcherVersion = "v2.3";
 
 			elseif skillText[2] == "Requires Mining" then
 				--mining
-				if GetSkillValue("Mining") < 600 then 
+				if GetSkillValue("Mining") < MAXSKILL then 
 					skillText[3] = "Skill:" .. GetSkillValue("Mining").. " (" ..  Horange .. "-" .. Hgrey .. ")"
 				else
 					--hide the skill line of text if at maximum skill
@@ -484,7 +487,7 @@ SkillWatcherVersion = "v2.3";
 				if GetSkillValue("Mining") < Horange then chance = 101; end
 			elseif skillText[2] == "Locked" and Hgrey and Horange then
 				--lockpicking
-				if GetSkillValue("Lockpicking") < 600 then
+				if GetSkillValue("Lockpicking") < MAXSKILL then
 					skillText[3] = "Level:" .. GetSkillValue("Lockpicking") .. " (Required: " ..  Hgrey .. ")"
 				else
 					--hide the skill line of text if at maximum skill
@@ -1063,34 +1066,28 @@ SkillWatcherVersion = "v2.3";
 			for i=1, 6 do
 				skillName = ""
 				if i == 1 and prof1 then
-					local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(prof1)
+					local name, icon, skillLevel, maxSkillLevel, numAbilities, offset, line, modifier, specialIndex, specialOffset = GetProfessionInfo(prof1)
 					skillName = name
-					skillID = firstAid
 				end
 				if i == 2 and prof2 then
-					local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(prof2)
+					local name, icon, skillLevel, maxSkillLevel, numAbilities, offset, line, modifier, specialIndex, specialOffset = GetProfessionInfo(prof2)
 					skillName = name
-					skillID = firstAid
 				end
 				if i == 3 and archaeology then
-					local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(archaeology)
+					local name, icon, skillLevel, maxSkillLevel, numAbilities, offset, line, modifier, specialIndex, specialOffset = GetProfessionInfo(archaeology)
 					skillName = name
-					skillID = firstAid
 				end
 				if i == 4 and fishing then
-					local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(fishing)
+					local name, icon, skillLevel, maxSkillLevel, numAbilities, offset, line, modifier, specialIndex, specialOffset = GetProfessionInfo(fishing)
 					skillName = name
-					skillID = firstAid
 				end
 				if i == 5 and cooking then
-					local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(cooking)
+					local name, icon, skillLevel, maxSkillLevel, numAbilities, offset, line, modifier, specialIndex, specialOffset = GetProfessionInfo(cooking)
 					skillName = name
-					skillID = firstAid
 				end
 				if i == 6 and firstAid then
-					local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(firstAid)
+					local name, icon, skillLevel, maxSkillLevel, numAbilities, offset, line, modifier, specialIndex, specialOffset = GetProfessionInfo(firstAid)
 					skillName = name
-					skillID = firstAid
 				end
 
 				if skillName ~= "" then
@@ -1186,32 +1183,26 @@ SkillWatcherVersion = "v2.3";
 			if i == 1 and prof1 then
 				local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(prof1)
 				skillName = name
-				skillID = firstAid
 			end
 			if i == 2 and prof2 then
 				local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(prof2)
 				skillName = name
-				skillID = firstAid
 			end
 			if i == 3 and archaeology then
 				local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(archaeology)
 				skillName = name
-				skillID = firstAid
 			end
 			if i == 4 and fishing then
 				local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(fishing)
 				skillName = name
-				skillID = firstAid
 			end
 			if i == 5 and cooking then
 				local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(cooking)
 				skillName = name
-				skillID = firstAid
 			end
 			if i == 6 and firstAid then
 				local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(firstAid)
 				skillName = name
-				skillID = firstAid
 			end
 
 			if skillName ~= "" then
@@ -1219,32 +1210,33 @@ SkillWatcherVersion = "v2.3";
 				if not (SkillArray[skillName]) then
 					--table for holding skill levels
 					SkillArray[skillName] = {
-						["current"] = GetSkillValue(skillName),
-						["max"] = GetSkillMaxValue(skillName),
+						["current"] = skillLevel,
+						["max"] = maxSkillLevel,
 						["old"] = 0,
 						["color"] = "00ffffff",
 						["show"] = 1
 						};
 				end
-				--textThing = textThing .. skillID .. " " .. name .. " " .. skillLevel .. " " .. maxSkillLevel .. " " .. numAbilities .. " " .. return6 .. " " .. return7 .. "|r\n"
+				--textThing = textThing .. " " .. name .. " " .. skillLevel .. " " .. maxSkillLevel .. " " .. numAbilities .. " " .. return6 .. " " .. return7 .. "|r\n"
 			
 					
 			--display only skills not at 0 or maxed
-			if (GetSkillValue(skillName) > 0 and GetSkillValue(skillName) < 600) or SkillArray[skillName].show == 2 or SkillWatcherConfig_DetailWindowON == 1 then
+			if (GetSkillValue(skillName) > 0 and GetSkillValue(skillName) < MAXSKILL) or SkillArray[skillName].show == 2 or SkillWatcherConfig_DetailWindowON == 1 then
 			
 				
 				-- notifier instafix
 				if SkillArray[skillName].color == "ff00ff00" then SkillArray[skillName].color = "ffffffff"; end
 				
 				-- Training notifier
-				if SkillArray[skillName].max == 75 and SkillArray[skillName].current > 50 then SkillArray[skillName].color = "ff00ff00"; end
-				if SkillArray[skillName].max == 150 and SkillArray[skillName].current > 125 then SkillArray[skillName].color = "ff00ff00"; end
-				if SkillArray[skillName].max == 225 and SkillArray[skillName].current > 200 then SkillArray[skillName].color = "ff00ff00"; end
-				if SkillArray[skillName].max == 300 and SkillArray[skillName].current > 275 then SkillArray[skillName].color = "ff00ff00"; end
-				if SkillArray[skillName].max == 375 and SkillArray[skillName].current > 350 then SkillArray[skillName].color = "ff00ff00"; end
-				if SkillArray[skillName].max == 450 and SkillArray[skillName].current > 425 then SkillArray[skillName].color = "ff00ff00"; end
-				if SkillArray[skillName].max == 525 and SkillArray[skillName].current > 500 then SkillArray[skillName].color = "ff00ff00"; end
-				--if SkillArray[skillName].max == 600 and SkillArray[skillName].current > 575 then SkillArray[skillName].color = "ff00ff00"; end
+				skillLevelReq = 0
+				if SkillArray[skillName].max == 75 and SkillArray[skillName].current >= 50 then SkillArray[skillName].color = "ff00ff00"; skillLevelReq=5; end
+				if SkillArray[skillName].max == 150 and SkillArray[skillName].current >= 125 then SkillArray[skillName].color = "ff00ff00"; skillLevelReq=10; end
+				if SkillArray[skillName].max == 225 and SkillArray[skillName].current >= 200 then SkillArray[skillName].color = "ff00ff00"; skillLevelReq=25; end
+				if SkillArray[skillName].max == 300 and SkillArray[skillName].current >= 275 then SkillArray[skillName].color = "ff00ff00"; skillLevelReq=40; end
+				if SkillArray[skillName].max == 375 and SkillArray[skillName].current >= 350 then SkillArray[skillName].color = "ff00ff00"; skillLevelReq=55; end
+				if SkillArray[skillName].max == 450 and SkillArray[skillName].current >= 425 then SkillArray[skillName].color = "ff00ff00"; skillLevelReq=75; end
+				if SkillArray[skillName].max == 525 and SkillArray[skillName].current >= 500 then SkillArray[skillName].color = "ff00ff00"; skillLevelReq=85; end
+				--if SkillArray[skillName].max == 600 and SkillArray[skillName].current >= 575 then SkillArray[skillName].color = "ff00ff00"; skillLevelReq=90; end
 
 				-- capped notified (less than expansion max)
 				if(GetSkillValue(skillName) == GetSkillMaxValue(skillName)) then
@@ -1314,7 +1306,12 @@ SkillWatcherVersion = "v2.3";
 					else
 						SkillWatcherFrame:SetWidth(150)
 					end
-					textThing = textThing .. " |c" .. SkillArray[skillName].color .. skillNameMod .. " " .. GetSkillValue(skillName) .. "/" .. GetSkillMaxValue(skillName) .. "|r\n"
+					textThing = textThing .. " |c" .. SkillArray[skillName].color .. skillNameMod .. " " .. GetSkillValue(skillName) .. "/" .. GetSkillMaxValue(skillName)
+						--level training caps
+					if skillLevelReq > 0 then
+						textThing = textThing .. " (" .. skillLevelReq .. ")"
+					end
+					textThing = textThing .. "|r\n"
 					--frame height determined by font size * lines
 					frameHeight = frameHeight + 10
 				end
