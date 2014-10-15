@@ -1,12 +1,12 @@
 -- ==========================
 -- Name: SkillWatcher.lua
--- Last Updated: 20101209
+-- Last Updated: 2014 10 15
 -- Page Version: SkillWatcher.lua  
 -- ==========================
 
 --match these variables with versioning in the TOC file
-SkillWatcherGameVersion = "PANDA 5.4.2";
-SkillWatcherVersion = "v2.3";
+SkillWatcherGameVersion = "WARLORD 6.0.2";
+SkillWatcherVersion = "v2.4a";
 
 -- [[========================
 -- Path to file:  WoW/Interface/Addons/SkillWatcher
@@ -14,6 +14,13 @@ SkillWatcherVersion = "v2.3";
 -- ==========================
 -- Version History
 --
+--		2.4a-	* Added "Way of the" skills - only appears once you open cooking tab, though!  Some weird variable thing.
+--					- these only show if rank < maxrank
+--		2.4 -	update to WARLORD 6.0.2, pre-expansion
+--				* Bugfix: "if GetChecked() == 1" should be "if GetChecked()" since it's boolean
+--				* Tooltip removed "Requires"
+--				* Went ahead and increased the cap to 700
+--				* Added show bonus skill.  Skills still hide depending on base value, not base + bonus
 --		2.3 -	updated lockbox info because I wanted to play rogue for 2 minutes
 --			-	updated levelup coloring through Pandaria (600)
 --			-	if profession is max at capped, show yellow instead of hiding.  Still hide if at XPAC max (600 Pandaria)
@@ -39,6 +46,7 @@ SkillWatcherVersion = "v2.3";
 -- ==========================
 -- = TO DO:
 --
+--		Add checkbox to include "Way of the" in the window
 --		Replace color fading procedure with math function
 --
 --		Config options
@@ -85,7 +93,7 @@ SkillWatcherVersion = "v2.3";
 		local SkillWatcherConfig_defaultTooltipMiningON = 1;
 		local SkillWatcherConfig_defaultTooltipHerbON = 1;		
 		local SkillWatcherConfig_defaultTooltipON = 1;
-		local MAXSKILL = 600; --Pandaria, changing it here doesn't change it *everywhere*
+		local MAXSKILL = 700; --Warlords, changing it here doesn't change it *everywhere*
 
 	-- ==== Slash Command ====
 		SLASH_SKILLWATCHER1 = "/skillwatcher";
@@ -218,8 +226,8 @@ SkillWatcherVersion = "v2.3";
 					--we're only replacing the tooltip on Herbalism and Mining nodes right now
 					
 					
-				if skillText[i] == "Requires Herbalism" and SkillWatcherConfig_TooltipHerbON == 1 then flag = 1; end
-				if skillText[i] == "Requires Mining" and SkillWatcherConfig_TooltipMiningON == 1 then flag = 1; end
+				if skillText[i] == "Herbalism" and SkillWatcherConfig_TooltipHerbON == 1 then flag = 1; end
+				if skillText[i] == "Mining" and SkillWatcherConfig_TooltipMiningON == 1 then flag = 1; end
 				--check for rogue/engineer/blacksmith
 				if skillText[i] == "Locked" then flag = 1; end
 				--jewelcrafting
@@ -454,7 +462,7 @@ SkillWatcherVersion = "v2.3";
 			
 
 			--Read "require" off node
-			if skillText[2] == "Requires Herbalism" then
+			if skillText[2] == "Herbalism" then
 				--herbalism
 				if GetSkillValue("Herbalism") < MAXSKILL then 
 					skillText[3] = "Skill:" .. GetSkillValue("Herbalism") .. " (" .. Horange .. "-" .. Hgrey .. ")"
@@ -470,7 +478,7 @@ SkillWatcherVersion = "v2.3";
 				if GetSkillValue("Herbalism") >= Hgrey then chance = 0; end
 				if GetSkillValue("Herbalism") < Horange then chance = 101; end
 
-			elseif skillText[2] == "Requires Mining" then
+			elseif skillText[2] == "Mining" then
 				--mining
 				if GetSkillValue("Mining") < MAXSKILL then 
 					skillText[3] = "Skill:" .. GetSkillValue("Mining").. " (" ..  Horange .. "-" .. Hgrey .. ")"
@@ -615,37 +623,37 @@ SkillWatcherVersion = "v2.3";
 		   --button handler functions
 		SkillWatcher.panel.okay = function(self)
 			--self.originalValue = MY_VARIABLE;
-			if TestCheckButton:GetChecked() == 1 then
+			if TestCheckButton:GetChecked() then
 				SkillWatcherConfig_defaultTest = 1
 			else
 				SkillWatcherConfig_defaultTest = 2
 			end
 			
-			if TooltipMiningCheckButton:GetChecked() == 1 then
+			if TooltipMiningCheckButton:GetChecked() then
 				SkillWatcherConfig_TooltipMiningON = 1
 			else
 				SkillWatcherConfig_TooltipMiningON = 2
 			end
 			
-			if TooltipHerbCheckButton:GetChecked() == 1 then
+			if TooltipHerbCheckButton:GetChecked() then
 				SkillWatcherConfig_TooltipHerbON = 1
 			else
 				SkillWatcherConfig_TooltipHerbON = 2
 			end
 			
-			if WindowCheckButton:GetChecked() == 1 then
+			if WindowCheckButton:GetChecked() then
 				SkillWatcherConfig_WindowON = 1
 			else
 				SkillWatcherConfig_WindowON = 2
 			end
 
-			if TooltipCheckButton:GetChecked() == 1 then
+			if TooltipCheckButton:GetChecked() then
 				SkillWatcherConfig_TooltipON = 1
 			else
 				SkillWatcherConfig_TooltipON = 2
 			end
 
-			if WindowMovableCheckButton:GetChecked() == 1 then
+			if WindowMovableCheckButton:GetChecked() then
 				--show checkmark to lock it
 				SkillWatcherConfig_WindowMovable = 2
 			else
@@ -743,6 +751,17 @@ SkillWatcherVersion = "v2.3";
 		TestCheckButton:SetHighlightTexture("Interface\\Buttons\\UI-CheckBox-Highlight", "ADD")
 		TestCheckButton:SetCheckedTexture("Interface\\Buttons\\UI-CheckBox-Check")
 		TestCheckButton:Show()
+
+		TestCheckButton:SetScript("OnClick", 
+  			function()
+				if (TestCheckButton:GetChecked()) then
+					DEFAULT_CHAT_FRAME:AddMessage("testcheckbutton:getchecked TRUE")
+				else
+					DEFAULT_CHAT_FRAME:AddMessage("testcheckbutton:getchecked FALSE")
+				end
+
+  			end);		
+
 		--text
 		SkillWatcherFrame.textSub = SkillWatcher.panel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 		SkillWatcherFrame.textSub:SetPoint("TOPLEFT", 45, -46)
@@ -1066,27 +1085,27 @@ SkillWatcherVersion = "v2.3";
 			for i=1, 6 do
 				skillName = ""
 				if i == 1 and prof1 then
-					local name, icon, skillLevel, maxSkillLevel, numAbilities, offset, line, modifier, specialIndex, specialOffset = GetProfessionInfo(prof1)
+					local name, icon, skillLevel, maxSkillLevel, numAbilities, abilityOffset, skillIdNum, skillModifier, specializationIndex, specializationOffset = GetProfessionInfo(prof1)
 					skillName = name
 				end
 				if i == 2 and prof2 then
-					local name, icon, skillLevel, maxSkillLevel, numAbilities, offset, line, modifier, specialIndex, specialOffset = GetProfessionInfo(prof2)
+					local name, icon, skillLevel, maxSkillLevel, numAbilities, abilityOffset, skillIdNum, skillModifier, specializationIndex, specializationOffset = GetProfessionInfo(prof2)
 					skillName = name
 				end
 				if i == 3 and archaeology then
-					local name, icon, skillLevel, maxSkillLevel, numAbilities, offset, line, modifier, specialIndex, specialOffset = GetProfessionInfo(archaeology)
+					local name, icon, skillLevel, maxSkillLevel, numAbilities, abilityOffset, skillIdNum, skillModifier, specializationIndex, specializationOffset = GetProfessionInfo(archaeology)
 					skillName = name
 				end
 				if i == 4 and fishing then
-					local name, icon, skillLevel, maxSkillLevel, numAbilities, offset, line, modifier, specialIndex, specialOffset = GetProfessionInfo(fishing)
+					local name, icon, skillLevel, maxSkillLevel, numAbilities, abilityOffset, skillIdNum, skillModifier, specializationIndex, specializationOffset = GetProfessionInfo(fishing)
 					skillName = name
 				end
 				if i == 5 and cooking then
-					local name, icon, skillLevel, maxSkillLevel, numAbilities, offset, line, modifier, specialIndex, specialOffset = GetProfessionInfo(cooking)
+					local name, icon, skillLevel, maxSkillLevel, numAbilities, abilityOffset, skillIdNum, skillModifier, specializationIndex, specializationOffset = GetProfessionInfo(cooking)
 					skillName = name
 				end
 				if i == 6 and firstAid then
-					local name, icon, skillLevel, maxSkillLevel, numAbilities, offset, line, modifier, specialIndex, specialOffset = GetProfessionInfo(firstAid)
+					local name, icon, skillLevel, maxSkillLevel, numAbilities, abilityOffset, skillIdNum, skillModifier, specializationIndex, specializationOffset = GetProfessionInfo(firstAid)
 					skillName = name
 				end
 
@@ -1172,6 +1191,8 @@ SkillWatcherVersion = "v2.3";
 	-- ==== Update Data Window ====
 	function SkillWatcher_UpdateWindow()    
 	
+		local cookingText = ""
+		local cookingSize = 0
 	
 		textThing = ""
 		frameHeight = 0
@@ -1181,28 +1202,70 @@ SkillWatcherVersion = "v2.3";
 		for i=1, 6 do
 			skillName = ""
 			if i == 1 and prof1 then
-				local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(prof1)
+				local name, icon, skillLevel, maxSkillLevel, numAbilities, abilityOffset, skillIdNum, skillModifier, specializationIndex, specializationOffset = GetProfessionInfo(prof1)
 				skillName = name
+				bonus = skillModifier
 			end
 			if i == 2 and prof2 then
-				local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(prof2)
+				local name, icon, skillLevel, maxSkillLevel, numAbilities, abilityOffset, skillIdNum, skillModifier, specializationIndex, specializationOffset = GetProfessionInfo(prof2)
 				skillName = name
+				bonus = skillModifier
 			end
 			if i == 3 and archaeology then
-				local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(archaeology)
+				local name, icon, skillLevel, maxSkillLevel, numAbilities, abilityOffset, skillIdNum, skillModifier, specializationIndex, specializationOffset = GetProfessionInfo(archaeology)
 				skillName = name
+				bonus = skillModifier
 			end
 			if i == 4 and fishing then
-				local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(fishing)
+				local name, icon, skillLevel, maxSkillLevel, numAbilities, abilityOffset, skillIdNum, skillModifier, specializationIndex, specializationOffset = GetProfessionInfo(fishing)
 				skillName = name
+				bonus = skillModifier
 			end
 			if i == 5 and cooking then
-				local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(cooking)
+				local name, icon, skillLevel, maxSkillLevel, numAbilities, abilityOffset, skillIdNum, skillModifier, specializationIndex, specializationOffset = GetProfessionInfo(cooking)
 				skillName = name
+				bonus = skillModifier
+
+				-- Pandaria "Way of the" are actually recipes!  so we need to get that info since they are "skills" we need to watch
+
+					-- skillName, skillType, numAvailable, isExpanded, serviceType, numSkillUps, indentLevel, showProgressBar, currentRank, maxRank, startingRank = GetTradeSkillInfo(index)
+				local cookingWayOfThe = { 
+					['Way of the Brew'] =    125589,
+					['Way of the Grill'] =   124694,
+					['Way of the Oven'] =    125588,
+					['Way of the Pot'] =     125586,
+					['Way of the Steamer'] = 125587,
+					['Way of the Wok'] =     125584,
+				}
+
+				for j = 1,5000 do
+					local tradeName,tradeType = GetTradeSkillInfo(j)
+					local rank,maxrank = select(9,GetTradeSkillInfo(j))
+
+					if tradeName then
+						--DEFAULT_CHAT_FRAME:AddMessage(" | " .. j .. tradeName .. " is rank " .. rank .. "/" .. maxrank)
+					end
+
+					if tradeName and tradeType=="subheader" then --Cooking Masteries
+						for cookingName, id in pairs(cookingWayOfThe) do
+							local name = GetSpellInfo(id) --local name
+
+							if tradeName == name and rank < maxrank and rank > 0 then
+								cookingName = skillName.gsub(cookingName, "Way of the ", "")
+								cookingText = cookingText .. " * " .. cookingName .. " " .. rank .. "/" .. maxrank .. "|r\n"
+								cookingSize = cookingSize + 10
+								break
+							end
+						end
+					end
+				end
+
+
 			end
 			if i == 6 and firstAid then
-				local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(firstAid)
+				local name, icon, skillLevel, maxSkillLevel, numAbilities, abilityOffset, skillIdNum, skillModifier, specializationIndex, specializationOffset = GetProfessionInfo(firstAid)
 				skillName = name
+				bonus = skillModifier
 			end
 
 			if skillName ~= "" then
@@ -1210,8 +1273,8 @@ SkillWatcherVersion = "v2.3";
 				if not (SkillArray[skillName]) then
 					--table for holding skill levels
 					SkillArray[skillName] = {
-						["current"] = skillLevel,
-						["max"] = maxSkillLevel,
+						["current"] = GetSkillValue(skillName),
+						["max"] = GetSkillMaxValue(skillName),
 						["old"] = 0,
 						["color"] = "00ffffff",
 						["show"] = 1
@@ -1236,7 +1299,7 @@ SkillWatcherVersion = "v2.3";
 				if SkillArray[skillName].max == 375 and SkillArray[skillName].current >= 350 then SkillArray[skillName].color = "ff00ff00"; skillLevelReq=55; end
 				if SkillArray[skillName].max == 450 and SkillArray[skillName].current >= 425 then SkillArray[skillName].color = "ff00ff00"; skillLevelReq=75; end
 				if SkillArray[skillName].max == 525 and SkillArray[skillName].current >= 500 then SkillArray[skillName].color = "ff00ff00"; skillLevelReq=85; end
-				--if SkillArray[skillName].max == 600 and SkillArray[skillName].current >= 575 then SkillArray[skillName].color = "ff00ff00"; skillLevelReq=90; end
+				if SkillArray[skillName].max == 700 and SkillArray[skillName].current >= 575 then SkillArray[skillName].color = "ff00ff00"; skillLevelReq=90; end
 
 				-- capped notified (less than expansion max)
 				if(GetSkillValue(skillName) == GetSkillMaxValue(skillName)) then
@@ -1306,12 +1369,25 @@ SkillWatcherVersion = "v2.3";
 					else
 						SkillWatcherFrame:SetWidth(150)
 					end
-					textThing = textThing .. " |c" .. SkillArray[skillName].color .. skillNameMod .. " " .. GetSkillValue(skillName) .. "/" .. GetSkillMaxValue(skillName)
+					textThing = textThing .. " |c" .. SkillArray[skillName].color .. skillNameMod .. " " .. GetSkillValue(skillName)
+					if(bonus > 0) then
+						textThing = textThing .. "|cff00ff00+" .. bonus .. "|c" .. SkillArray[skillName].color
+					end
+					textThing = textThing .. "/" .. GetSkillMaxValue(skillName)
+
 						--level training caps
 					if skillLevelReq > 0 then
 						textThing = textThing .. " (" .. skillLevelReq .. ")"
 					end
 					textThing = textThing .. "|r\n"
+					if cookingText and cookingText ~= "" then
+						textThing = textThing .. cookingText
+						frameHeight = frameHeight + cookingSize
+						-- reset vars so they don't show up again
+						cookingText = ""
+						cookingSize = 0
+					end
+
 					--frame height determined by font size * lines
 					frameHeight = frameHeight + 10
 				end
@@ -1345,38 +1421,40 @@ SkillWatcherVersion = "v2.3";
 		end
 		local prof1, prof2, archaeology, fishing, cooking, firstAid = GetProfessions();
 		for i=1, 6 do
+
+--name, texture, rank, maxRank, numSpells, spelloffset, skillLine, rankModifier, specializationIndex, specializationOffset = GetProfessionInfo(index)			
 			if i == 1 and prof1 then
-				local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(prof1)
+				local name, icon, skillLevel, maxSkillLevel, numAbilities, abilityOffset, skillIdNum, skillModifier, specializationIndex, specializationOffset = GetProfessionInfo(prof1)
 				if name==skill then
 					return skillLevel
 				end 
 			end
 			if i == 2 and prof2 then
-				local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(prof2)
+				local name, icon, skillLevel, maxSkillLevel, numAbilities, abilityOffset, skillIdNum, skillModifier, specializationIndex, specializationOffset = GetProfessionInfo(prof2)
 				if name==skill then
 					return skillLevel
 				end 
 			end
 			if i == 3 and archaeology then
-				local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(archaeology)
+				local name, icon, skillLevel, maxSkillLevel, numAbilities, abilityOffset, skillIdNum, skillModifier, specializationIndex, specializationOffset = GetProfessionInfo(archaeology)
 				if name==skill then
 					return skillLevel
 				end 
 			end
 			if i == 4 and fishing then
-				local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(fishing)
+				local name, icon, skillLevel, maxSkillLevel, numAbilities, abilityOffset, skillIdNum, skillModifier, specializationIndex, specializationOffset = GetProfessionInfo(fishing)
 				if name==skill then
 					return skillLevel
 				end 
 			end
 			if i == 5 and cooking then
-				local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(cooking)
+				local name, icon, skillLevel, maxSkillLevel, numAbilities, abilityOffset, skillIdNum, skillModifier, specializationIndex, specializationOffset = GetProfessionInfo(cooking)
 				if name==skill then
 					return skillLevel
 				end 
 			end
 			if i == 6 and firstAid then
-				local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(firstAid)
+				local name, icon, skillLevel, maxSkillLevel, numAbilities, abilityOffset, skillIdNum, skillModifier, specializationIndex, specializationOffset = GetProfessionInfo(firstAid)
 				if name==skill then
 					return skillLevel
 				end 
@@ -1393,37 +1471,37 @@ SkillWatcherVersion = "v2.3";
 		local prof1, prof2, archaeology, fishing, cooking, firstAid = GetProfessions();
 		for i=1, 6 do
 			if i == 1 and prof1 then
-				local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(prof1)
+				local name, icon, skillLevel, maxSkillLevel, numAbilities, abilityOffset, skillIdNum, skillModifier, specializationIndex, specializationOffset = GetProfessionInfo(prof1)
 				if name==skill then
 					return maxSkillLevel
 				end 
 			end
 			if i == 2 and prof2 then
-				local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(prof2)
+				local name, icon, skillLevel, maxSkillLevel, numAbilities, abilityOffset, skillIdNum, skillModifier, specializationIndex, specializationOffset = GetProfessionInfo(prof2)
 				if name==skill then
 					return maxSkillLevel
 				end 
 			end
 			if i == 3 and archaeology then
-				local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(archaeology)
+				local name, icon, skillLevel, maxSkillLevel, numAbilities, abilityOffset, skillIdNum, skillModifier, specializationIndex, specializationOffset = GetProfessionInfo(archaeology)
 				if name==skill then
 					return maxSkillLevel
 				end 
 			end
 			if i == 4 and fishing then
-				local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(fishing)
+				local name, icon, skillLevel, maxSkillLevel, numAbilities, abilityOffset, skillIdNum, skillModifier, specializationIndex, specializationOffset = GetProfessionInfo(fishing)
 				if name==skill then
 					return maxSkillLevel
 				end 
 			end
 			if i == 5 and cooking then
-				local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(cooking)
+				local name, icon, skillLevel, maxSkillLevel, numAbilities, abilityOffset, skillIdNum, skillModifier, specializationIndex, specializationOffset = GetProfessionInfo(cooking)
 				if name==skill then
 					return maxSkillLevel
 				end 
 			end
 			if i == 6 and firstAid then
-				local name, icon, skillLevel, maxSkillLevel, numAbilities, return6, return7 = GetProfessionInfo(firstAid)
+				local name, icon, skillLevel, maxSkillLevel, numAbilities, abilityOffset, skillIdNum, skillModifier, specializationIndex, specializationOffset = GetProfessionInfo(firstAid)
 				if name==skill then
 					return maxSkillLevel
 				end 
