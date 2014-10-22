@@ -6,58 +6,60 @@
 
 --match these variables with versioning in the TOC file
 SkillWatcherGameVersion = "WARLORD 6.0.2";
-SkillWatcherVersion = "v2.4a";
+SkillWatcherVersion = "v2.4b";
 
--- [[========================
--- Path to file:  WoW/Interface/Addons/SkillWatcher
--- Author:  SyKoHPaTh - sykohpath@gmail.com
--- ==========================
--- Version History
---
---		2.4a-	* Added "Way of the" skills - only appears once you open cooking tab, though!  Some weird variable thing.
---					- these only show if rank < maxrank
---		2.4 -	update to WARLORD 6.0.2, pre-expansion
---				* Bugfix: "if GetChecked() == 1" should be "if GetChecked()" since it's boolean
---				* Tooltip removed "Requires"
---				* Went ahead and increased the cap to 700
---				* Added show bonus skill.  Skills still hide depending on base value, not base + bonus
---		2.3 -	updated lockbox info because I wanted to play rogue for 2 minutes
---			-	updated levelup coloring through Pandaria (600)
---			-	if profession is max at capped, show yellow instead of hiding.  Still hide if at XPAC max (600 Pandaria)
---			-	removed that empty line from the display window (finally!!)
---			-	MAXSKILL variable, just make it easier to update
---			-	When skill ready to be "trained", show the level required to train it - THIS IS GUESS sorta
---		2.2 -	option to lock window to keep it from moving, add Cata and Panda nodes (mining/herbalism)
---		2.1	-	option to turn off/on the tooltip window thing, bugfix ("Not found!" tooltip thing), bugfix (savedvariables not reading / event)
---		2.0	-	Update to WRATH 4.0, Window size fix, added Prospecting mats tooltip stuff
---		1.9b-	Add to tracking: blacksmith and engineering skill for "locked", customizable skills shown through config window
---		1.9a-	Update to WRATH 3.3.2, added Rogue skill tracking for lockpicking: chests, doors, loot, etc.
---		1.9	-	added training notifiers
---		1.8 -	config window
---		1.7	-	Updated version to WRATH 3.2.0; fixed "long line" bug with long skill names
---		1.6	-	change level ping color fade
---		1.5	-	code cleanup, launch, bug fixes
---		1.4	-	save frame position, tooltip more data
---		1.3	-	color "ping", tooltip modification
---		1.2	-	code cleanup
---		1.1	-	cleaned up frame, cleaned up code
---		1.0	-	Initial structure
---
--- ==========================
--- = TO DO:
---
---		Add checkbox to include "Way of the" in the window
---		Replace color fading procedure with math function
---
---		Config options
---			Skin Selection
---			Font Selection/styling
---		Save Variables
---			background texture
---			font selection/styling/size
---			text coloring
---			Tracking of certain skills
--- ==========================
+--[[========================
+Path to file:  WoW/Interface/Addons/SkillWatcher
+Author:  SyKoHPaTh - sykohpath@gmail.com
+==========================
+Version History
+
+		2.4b-	* Split out database into separate file (finally) - should be easier to manually add data now
+				* Fix issue with font height.  Previously 10, now 12
+		2.4a-	* Added "Way of the" skills - only appears once you open cooking tab, though!  Some weird variable thing.
+					- these only show if rank < maxrank
+		2.4 -	update to WARLORD 6.0.2, pre-expansion
+				* Bugfix: "if GetChecked() == 1" should be "if GetChecked()" since it's boolean
+				* Tooltip removed "Requires"
+				* Went ahead and increased the cap to 700
+				* Added show bonus skill.  Skills still hide depending on base value, not base + bonus
+		2.3 -	updated lockbox info because I wanted to play rogue for 2 minutes
+			-	updated levelup coloring through Pandaria (600)
+			-	if profession is max at capped, show yellow instead of hiding.  Still hide if at XPAC max (600 Pandaria)
+			-	removed that empty line from the display window (finally!!)
+			-	MAXSKILL variable, just make it easier to update
+			-	When skill ready to be "trained", show the level required to train it - THIS IS GUESS sorta
+		2.2 -	option to lock window to keep it from moving, add Cata and Panda nodes (mining/herbalism)
+		2.1	-	option to turn off/on the tooltip window thing, bugfix ("Not found!" tooltip thing), bugfix (savedvariables not reading / event)
+		2.0	-	Update to WRATH 4.0, Window size fix, added Prospecting mats tooltip stuff
+		1.9b-	Add to tracking: blacksmith and engineering skill for "locked", customizable skills shown through config window
+		1.9a-	Update to WRATH 3.3.2, added Rogue skill tracking for lockpicking: chests, doors, loot, etc.
+		1.9	-	added training notifiers
+		1.8 -	config window
+		1.7	-	Updated version to WRATH 3.2.0; fixed "long line" bug with long skill names
+		1.6	-	change level ping color fade
+		1.5	-	code cleanup, launch, bug fixes
+		1.4	-	save frame position, tooltip more data
+		1.3	-	color "ping", tooltip modification
+		1.2	-	code cleanup
+		1.1	-	cleaned up frame, cleaned up code
+		1.0	-	Initial structure
+
+==========================
+= TO DO:
+
+		Add checkbox to include "Way of the" in the window
+		Replace color fading procedure with math function
+
+		Config options
+			Skin Selection
+			Font Selection/styling
+		Save Variables
+			background texture
+			font selection/styling/size
+			text coloring
+			Tracking of certain skills
+==========================
 --]]
 
 --Shared Variables:
@@ -248,9 +250,17 @@ SkillWatcherVersion = "v2.4a";
 			
 			--prevent nil
 			Horange = 0; Hyellow = 0; Hgreen = 0; Hgrey = 0; skillText[4] = "Need to add to database";
+
+			DEFAULT_CHAT_FRAME:AddMessage(skillWatcher_data[skillText[1]]["text"]);
+			Horange = skillWatcher_data[skillText[1]]["min"];
+			Hyellow = skillWatcher_data[skillText[1]]["low"];
+			Hgreen = skillWatcher_data[skillText[1]]["high"];
+			Hgrey = skillWatcher_data[skillText[1]]["max"];
+			skillText[4] = skillWatcher_data[skillText[1]]["text"];
 			
 			--====Mining====
 			--Old World
+			-- 
 			if skillText[1] == "Copper Vein" then Horange = 1; Hyellow = 25; Hgreen = 50; Hgrey = 100; skillText[4] = "Copper Ore, Rough Stone"; end
 			if skillText[1] == "Incendicite Mineral Vein" then Horange = 65; Hyellow = 50; Hgreen = 115; Hgrey = 165; skillText[4] = "Incendicite Ore"; end
 			if skillText[1] == "Tin Vein" then Horange = 65; Hyellow = 90; Hgreen = 115; Hgrey = 165; skillText[4] = "Tin Ore, Course Stone"; end
@@ -507,12 +517,14 @@ SkillWatcherVersion = "v2.4a";
 				if GetSkillValue("Lockpicking") < Hgrey then chance = 101; end
 				--Handle professions that effect this skill: Blacksmithing, Engineering
 				if GetSkillValue("Engineering") > 1 then
+					skillText[4] = "(SkillWatcher: Not in database! 'Engineering')";
 					if Horange < 150 then skillText[4] = "Use [Small Seaforium Charge]"; end
 					if Horange < 250 then skillText[4] = "Use [Large Seaforium Charge]"; end
 					if Horange < 300 then skillText[4] = "Use [Powerful Seaforim Charge]"; end
 					if Horange < 350 then skillText[4] = "Use [Elemental Seaforium Charge]"; end
 				end
 				if GetSkillValue("Blacksmithing") > 1 then
+					skillText[4] = "(SkillWatcher: Not in database! 'Blacksmithing')";
 					if Horange < 25 then skillText[4] = "Use [Silver Skeleton Key]"; end
 					if Horange < 125 then skillText[4] = "Use [Golden Skeleton Key]"; end
 					if Horange < 200 then skillText[4] = "Use [Truesilver Skeleton Key]"; end
@@ -522,6 +534,7 @@ SkillWatcherVersion = "v2.4a";
 				end
 				if GetSkillValue("Blacksmithing") > 1 and GetSkillValue("Engineering") > 1 then
 					--for the crazy people that have BOTH Blacksmithing and Engineering!
+					skillText[4] = "(SkillWatcher: Not in database! 'Blacksmithing' and 'Engineering')";
 					if Horange < 25 then skillText[4] = "Use [Silver Skeleton Key] or [Small Seaforium Charge]"; end
 					if Horange < 125 then skillText[4] = "Use [Golden Skeleton Key] or [Small Seaforium Charge]"; end
 					if Horange < 150 then skillText[4] = "Use [Truesilver Skeleton Key] or [Small Seaforium Charge]"; end
@@ -533,7 +546,7 @@ SkillWatcherVersion = "v2.4a";
 					if Horange < 430 then skillText[4] = "Use [Titanium Skeleton Key] or [Elemental Seaforium Charge]"; end
 				end
 			elseif skillText[2] == "Prospectable" then
-				skillText[4] = "(SkillWatcher: Not in database! Let me know what this is)";
+				skillText[4] = "(SkillWatcher: Not in database! 'Prospectable')";
 				if skillText[1] == "Copper Ore" then skillText[4] = "Common: Tigerseye, Malachite"; end
 				if skillText[1] == "Tin Ore" then skillText[4] = "Common: Shadowgem, Lesser Moonstone, Moss Agate"; end
 				if skillText[1] == "Iron Ore" then skillText[4] = "Common: Citrine, Lesser Moonstone, Jade"; end
@@ -1389,7 +1402,7 @@ SkillWatcherVersion = "v2.4a";
 					end
 
 					--frame height determined by font size * lines
-					frameHeight = frameHeight + 10
+					frameHeight = frameHeight + 12
 				end
 			end
 			end

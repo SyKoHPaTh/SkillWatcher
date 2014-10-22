@@ -2,7 +2,7 @@
 ## To find build number, /run print((select(4, GetBuildInfo()))); in the game, and should print the version # to your chat frame
 ## 1 = version, 2 = build, 3 = date, 4 = tocversion number
 
-## Version: 2.4a
+## Version: 2.4b
 ## must be identical to .lua version
 
 ## Title: SkillWatcher
@@ -16,5 +16,6 @@
 ## SavedVariablesPerCharacter: SkillWatcherPoint, SkillWatcherX, SkillWatcherY, SkillWatcherConfig_TooltipMiningON, SkillWatcherConfig_TooltipHerbON, SkillWatcherConfig_WindowON, SkillArray, SkillWatcherConfig_TooltipON, SkillWatcherConfig_WindowMovable
 
 ## Dependencies: 
+SkillWatcher_Database.lua
 SkillWatcher.lua
 SkillWatcher.xml
