@@ -1,55 +1,72 @@
--- ==========================
--- Name: SkillWatcher.lua
--- Last Updated: 2014 10 15
--- Page Version: SkillWatcher.lua  
--- ==========================
+--[[==========================
+	Name: SkillWatcher.lua
+	Last Updated: 2014 10 15
+	Page Version: SkillWatcher.lua  
+	==========================]]
 
 --match these variables with versioning in the TOC file
 SkillWatcherGameVersion = "WARLORD 6.0.2";
 SkillWatcherVersion = "v2.4b";
 
 --[[========================
-Path to file:  WoW/Interface/Addons/SkillWatcher
-Author:  SyKoHPaTh - sykohpath@gmail.com
-==========================
-Version History
+	Path to file:  WoW/Interface/Addons/SkillWatcher
+	Author:  SyKoHPaTh - sykohpath@gmail.com
+	==========================
+* Version History
+*
+*		2.4b-	- Split out database into separate file (finally) - should be easier to manually add data now
+*					- Added a lot more data (mining, herb) to the database
+*						- everything up through PANDA is filled out
+*						- includes "guessed at" WARLORDS mining/herb nodes.  Prospecting still empty.
+*				- Fix issue with font height.  Previously 10, now 11 (Thanks to "Kru", who uses '12'.  If 11 doesn't work for him, then I'll make 12 official)
+*		2.4a-	- Added "Way of the" skills - only appears once you open cooking tab, though!  Some weird variable thing.
+*					- these only show if rank < maxrank
+*		2.4 -	- update to WARLORD 6.0.2, pre-expansion
+*				- Bugfix: "if GetChecked() == 1" should be "if GetChecked()" since it's boolean
+*				- Tooltip removed "Requires"
+*				- Went ahead and increased the cap to 700
+*				- Added show bonus skill.  Skills still hide depending on base value, not base + bonus
+*		2.3 -	- updated lockbox info because I wanted to play rogue for 2 minutes
+*				-	updated levelup coloring through Pandaria (600)
+*				-	if profession is max at capped, show yellow instead of hiding.  Still hide if at XPAC max (600 Pandaria)
+*				-	removed that empty line from the display window (finally!!)
+*				-	MAXSKILL variable, just make it easier to update
+*				-	When skill ready to be "trained", show the level required to train it - THIS IS GUESS sorta
+*		2.2 -	- option to lock window to keep it from moving, add Cata and Panda nodes (mining/herbalism)
+*		2.1	-	- option to turn off/on the tooltip window thing, bugfix ("Not found!" tooltip thing), bugfix (savedvariables not reading / event)
+*		2.0	-	- Update to WRATH 4.0, Window size fix, added Prospecting mats tooltip stuff
+*		1.9b-	- Add to tracking: blacksmith and engineering skill for "locked", customizable skills shown through config window
+*		1.9a-	- Update to WRATH 3.3.2, added Rogue skill tracking for lockpicking: chests, doors, loot, etc.
+*		1.9	-	- added training notifiers
+*		1.8 -	- config window
+*		1.7	-	- Updated version to WRATH 3.2.0; fixed "long line" bug with long skill names
+*		1.6	-	- change level ping color fade
+*		1.5	-	- code cleanup, launch, bug fixes
+*		1.4	-	- save frame position, tooltip more data
+*		1.3	-	- color "ping", tooltip modification
+*		1.2	-	- code cleanup
+*		1.1	-	- cleaned up frame, cleaned up code
+*		1.0	-	- Initial structure
 
-		2.4b-	* Split out database into separate file (finally) - should be easier to manually add data now
-				* Fix issue with font height.  Previously 10, now 12
-		2.4a-	* Added "Way of the" skills - only appears once you open cooking tab, though!  Some weird variable thing.
-					- these only show if rank < maxrank
-		2.4 -	update to WARLORD 6.0.2, pre-expansion
-				* Bugfix: "if GetChecked() == 1" should be "if GetChecked()" since it's boolean
-				* Tooltip removed "Requires"
-				* Went ahead and increased the cap to 700
-				* Added show bonus skill.  Skills still hide depending on base value, not base + bonus
-		2.3 -	updated lockbox info because I wanted to play rogue for 2 minutes
-			-	updated levelup coloring through Pandaria (600)
-			-	if profession is max at capped, show yellow instead of hiding.  Still hide if at XPAC max (600 Pandaria)
-			-	removed that empty line from the display window (finally!!)
-			-	MAXSKILL variable, just make it easier to update
-			-	When skill ready to be "trained", show the level required to train it - THIS IS GUESS sorta
-		2.2 -	option to lock window to keep it from moving, add Cata and Panda nodes (mining/herbalism)
-		2.1	-	option to turn off/on the tooltip window thing, bugfix ("Not found!" tooltip thing), bugfix (savedvariables not reading / event)
-		2.0	-	Update to WRATH 4.0, Window size fix, added Prospecting mats tooltip stuff
-		1.9b-	Add to tracking: blacksmith and engineering skill for "locked", customizable skills shown through config window
-		1.9a-	Update to WRATH 3.3.2, added Rogue skill tracking for lockpicking: chests, doors, loot, etc.
-		1.9	-	added training notifiers
-		1.8 -	config window
-		1.7	-	Updated version to WRATH 3.2.0; fixed "long line" bug with long skill names
-		1.6	-	change level ping color fade
-		1.5	-	code cleanup, launch, bug fixes
-		1.4	-	save frame position, tooltip more data
-		1.3	-	color "ping", tooltip modification
-		1.2	-	code cleanup
-		1.1	-	cleaned up frame, cleaned up code
-		1.0	-	Initial structure
+==========================
+= Shared Variables:
+	1.4	-	SkillWatcherPoint, SkillWatcherX, SkillWatcherY
+	1.8	-	SkillWatcherConfig_TooltipMiningON, SkillWatcherConfig_TooltipHerbON, SkillWatcherConfig_WindowON
+	1.9b-	SkillArray
+	2.1	-	SkillWatcherConfig_TooltipON
+	2.2 - 	SkillWatcherConfig_WindowMovable
 
 ==========================
 = TO DO:
 
 		Add checkbox to include "Way of the" in the window
 		Replace color fading procedure with math function
+		"Open Profession" button-icons on the window
+		Split out files even more:
+			init
+			basic functions
+			slash commands (make more robust, fill out with more info)
+			SkillWatcher.lua should be main controller
 
 		Config options
 			Skin Selection
@@ -61,24 +78,6 @@ Version History
 			Tracking of certain skills
 ==========================
 --]]
-
---Shared Variables:
---	1.4	-	SkillWatcherPoint, SkillWatcherX, SkillWatcherY
---	1.8	-	SkillWatcherConfig_TooltipMiningON, SkillWatcherConfig_TooltipHerbON, SkillWatcherConfig_WindowON
---	1.9b-	SkillArray
---	2.1	-	SkillWatcherConfig_TooltipON
---	2.2 - 	SkillWatcherConfig_WindowMovable
---
---
---
---
--- config options:
---	turn mod on and off SkillWatcherFrame:Hide(); and Show();
---	use skill window
-
-
-
-
 
 -- ======== PRECODE ======== 
 	--(code run instantly when file loaded)
@@ -215,7 +214,7 @@ Version History
 
 
 	-- ==== Tooltip handler ====
-	--replaces the game default tooltime
+	--replaces the game default tooltip
 	function SkillWatcher_Tooltip()
 		skillText = {}
 		local flag = 0 --used to specify if a node is hovered over
@@ -251,225 +250,14 @@ Version History
 			--prevent nil
 			Horange = 0; Hyellow = 0; Hgreen = 0; Hgrey = 0; skillText[4] = "Need to add to database";
 
-			DEFAULT_CHAT_FRAME:AddMessage(skillWatcher_data[skillText[1]]["text"]);
-			Horange = skillWatcher_data[skillText[1]]["min"];
-			Hyellow = skillWatcher_data[skillText[1]]["low"];
-			Hgreen = skillWatcher_data[skillText[1]]["high"];
-			Hgrey = skillWatcher_data[skillText[1]]["max"];
-			skillText[4] = skillWatcher_data[skillText[1]]["text"];
-			
-			--====Mining====
-			--Old World
-			-- 
-			if skillText[1] == "Copper Vein" then Horange = 1; Hyellow = 25; Hgreen = 50; Hgrey = 100; skillText[4] = "Copper Ore, Rough Stone"; end
-			if skillText[1] == "Incendicite Mineral Vein" then Horange = 65; Hyellow = 50; Hgreen = 115; Hgrey = 165; skillText[4] = "Incendicite Ore"; end
-			if skillText[1] == "Tin Vein" then Horange = 65; Hyellow = 90; Hgreen = 115; Hgrey = 165; skillText[4] = "Tin Ore, Course Stone"; end
-			if skillText[1] == "Silver Vein" then Horange = 75; Hyellow = 100; Hgreen = 125; Hgrey = 175; skillText[4] = "Silver Ore";end
-			if skillText[1] == "Ooze Covered Silver Vein" then Horange = 75; Hyellow = 100; Hgreen = 125; Hgrey = 175; skillText[4] = "Silver Ore";end
-			if skillText[1] == "Lesser Bloodstone Deposit" then Horange = 75; Hyellow = 100; Hgreen = 125; Hgrey = 175; skillText[4] = "Lesser Bloodstone Ore";end
-			if skillText[1] == "Iron Deposit" then Horange = 125; Hyellow = 150; Hgreen = 175; Hgrey = 225; skillText[4] = "Iron Ore, Heavy Stone";end
-			if skillText[1] == "Indurium Mineral Vein" then Horange = 150; Hyellow = 175; Hgreen = 200; Hgrey = 250; skillText[4] = "Indurium Ore";end
-			if skillText[1] == "Gold Vein" then Horange = 155; Hyellow = 175; Hgreen = 205; Hgrey = 255; skillText[4] = "Gold Ore";end
-			if skillText[1] == "Ooze Covered Gold Vein" then Horange = 155; Hyellow = 175; Hgreen = 205; Hgrey = 255; skillText[4] = "Gold Ore";end
-			if skillText[1] == "Mithril Deposit" then Horange = 175; Hyellow = 200; Hgreen = 225; Hgrey = 275; skillText[4] = "Mithril Ore, Solid Stone";end
-			if skillText[1] == "Ooze Covered Mithril Deposit" then Horange = 175; Hyellow = 200; Hgreen = 225; Hgrey = 275; skillText[4] = "Mithril Ore, Solid Stone";end
-			if skillText[1] == "Truesilver Deposit" then Horange = 230; Hyellow = 255; Hgreen = 280; Hgrey = 330; skillText[4] = "Truesilver Ore";end
-			if skillText[1] == "Ooze Covered Truesilver Deposit" then Horange = 230; Hyellow = 255; Hgreen = 280; Hgrey = 330; skillText[4] = "Truesilver Ore";end
-			if skillText[1] == "Dark Iron Deposit" then Horange = 230; Hyellow = 255; Hgreen = 280; Hgrey = 330; skillText[4] = "Dark Iron Ore";end
-			if skillText[1] == "Small Thorium Vein" then Horange = 245; Hyellow = 270; Hgreen = 295; Hgrey = 345; skillText[4] = "Thorium Ore, Dense Stone";end
-			if skillText[1] == "Ooze Covered Thorium Vein" then Horange = 245; Hyellow = 270; Hgreen = 295; Hgrey = 345; skillText[4] = "Thorium Ore, Dense Stone";end
-			if skillText[1] == "Rich Thorium Vein" then Horange = 275; Hyellow = 300; Hgreen = 325; Hgrey = 365; skillText[4] = "Thorium Ore, Dense Stone";end
-			if skillText[1] == "Ooze Covered Rich Thorium Vein" then Horange = 275; Hyellow = 300; Hgreen = 325; Hgrey = 365; skillText[4] = "Thorium Ore, Dense Stone";end
-			if skillText[1] == "Hakkari Thorium Vein" then Horange = 275; Hyellow = 300; Hgreen = 325; Hgrey = 365; skillText[4] = "Thorium Ore, Dense Stone";end
-			if skillText[1] == "Small Obsidian Chunk" then Horange = 305; Hyellow = 330; Hgreen = 355; Hgrey = 400; skillText[4] = "Small/Large Obsidian Shard";end
-			if skillText[1] == "Large Obsidian Chunk" then Horange = 305; Hyellow = 330; Hgreen = 355; Hgrey = 400; skillText[4] = "Small/Large Obsidian Shard";end
-			--Outlands
-			if skillText[1] == "Fel Iron Deposit" then Horange = 300; Hyellow = 325; Hgreen = 350; Hgrey = 400; skillText[4] = "Fel Iron Ore, Mote of Earth/Fire, Eternium Ore";end
-			if skillText[1] == "Adamantite Deposit" then Horange = 325; Hyellow = 350; Hgreen = 375; Hgrey = 401; skillText[4] = "Adamantite Ore, Mote of Earth, Eternium Ore";end
-			if skillText[1] == "Rich Adamantite Deposit" then Horange = 350; Hyellow = 375; Hgreen = 400; Hgrey = 401; skillText[4] = "Adamantite Ore, Mote of Earth, Eternium Ore";end
-			if skillText[1] == "Nethercite Ore" then Horange = 300; Hyellow = 401; Hgreen = 401; Hgrey = 401; skillText[4] = "Nethercite Ore, More of Earth/Fire, Eternium Ore";end
-			if skillText[1] == "Khorium Vein" then Horange = 375; Hyellow = 400; Hgreen = 401; Hgrey = 401; skillText[4] = "Khorium Ore, Mote of Earth/Fire, Eternium Ore";end
-			if skillText[1] == "Ancient Gem Vein" then Horange = 375; Hyellow = 401; Hgreen = 401; Hgrey = 401; skillText[4] = "";end
-			--Northrend
-			if skillText[1] == "Cobalt Deposit" then Horange = 350; Hyellow = 375; Hgreen = 400; Hgrey = 450; skillText[4] = "Cobalt Ore, Crystallized Earth/Water";end
-			if skillText[1] == "Rich Cobalt Deposit" then Horange = 375; Hyellow = 451; Hgreen = 451; Hgrey = 451; skillText[4] = "Cobalt Ore, Crystallized Earth/Water";end
-			if skillText[1] == "Saronite Deposit" then Horange = 400; Hyellow = 425; Hgreen = 451; Hgrey = 451; skillText[4] = "Saronite Ore, Crystallized Earth/Shadow";end
-			if skillText[1] == "Rich Saronite Deposit" then Horange = 425; Hyellow = 450; Hgreen = 451; Hgrey = 451; skillText[4] = "Saronite Ore, Crystallized Earth/Shadow";end
-			if skillText[1] == "Titanium Deposit" then Horange = 450; Hyellow = 451; Hgreen = 451; Hgrey = 451; skillText[4] = "Saronite Ore, Crystallized Earth/Fire/Water/Air";end
-			--Cataclysm
-			if skillText[1] == "Obsidium Deposit" then Horange = 425; Hyellow = 450; Hgreen = 475; Hgrey = 500; skillText[4] = "Obsidium Ore";end
-			if skillText[1] == "Rich Obsidium Deposit" then Horange = 450; Hyellow = 475; Hgreen = 500; Hgrey = 525; skillText[4] = "Obsidium Ore";end
-			if skillText[1] == "Elementium Vein" then Horange = 475; Hyellow = 500; Hgreen = 525; Hgrey = 525; skillText[4] = "Elementium Ore";end
-			if skillText[1] == "Rich Elementium Vein" then Horange = 500; Hyellow = 525; Hgreen = 475; Hgrey = 525; skillText[4] = "Elementium Ore";end
-			if skillText[1] == "Pyrite Deposit" then Horange = 525; Hyellow = 525; Hgreen = 525; Hgrey = 525; skillText[4] = "Pyrite Ore";end
-			if skillText[1] == "Rich Pyrite Deposit" then Horange = 525; Hyellow = 525; Hgreen = 525; Hgrey = 525; skillText[4] = "Pyrite Ore";end
-			--Pandaria
-			if skillText[1] == "Ghost Iron Deposit" then Horange = 500; Hyellow = 525; Hgreen = 550; Hgrey = 575; skillText[4] = "Ghost Iron Ore";end
-			if skillText[1] == "Rich Ghost Iron Deposit" then Horange = 550; Hyellow = 575; Hgreen = 600; Hgrey = 600; skillText[4] = "Ghost Iron Ore";end
-			if skillText[1] == "Kyparite Deposit" then Horange = 550; Hyellow = 575; Hgreen = 600; Hgrey = 600; skillText[4] = "Kyparite Ore";end
-			if skillText[1] == "Rich Kyparite Deposit" then Horange = 600; Hyellow = 600; Hgreen = 600; Hgrey = 600; skillText[4] = "Kyparite Ore";end
-			if skillText[1] == "Trillium Vein" then Horange = 600; Hyellow = 600; Hgreen = 600; Hgrey = 600; skillText[4] = "White or Black Trillium Ore";end
-			if skillText[1] == "Rich Trillium Vein" then Horange = 600; Hyellow = 600; Hgreen = 600; Hgrey = 600; skillText[4] = "White or Black Trillium Ore";end
-
-			--====Herbalism====
-			--Old World
-			if skillText[1] == "Peacebloom" then Horange = 1; Hyellow = 25; Hgreen = 50; Hgrey = 100; skillText[4] = "Peacebloom"; end
-			if skillText[1] == "Silverleaf" then Horange = 1; Hyellow = 25; Hgreen = 50; Hgrey = 100; skillText[4] = "Silverleaf"; end
-			if skillText[1] == "Bloodthistle" then Horange = 1; Hyellow = 25; Hgreen = 50; Hgrey = 100; skillText[4] = "Bloodthistle"; end
-			if skillText[1] == "Earthroot" then Horange = 15; Hyellow = 40; Hgreen = 65; Hgrey = 115; skillText[4] = "Earthroot"; end
-			if skillText[1] == "Mageroyal" then Horange = 50; Hyellow = 75; Hgreen = 100; Hgrey = 150; skillText[4] = "Mageroyal, Swiftthistle"; end
-			if skillText[1] == "Briarthorn" then Horange = 70; Hyellow = 95; Hgreen = 120; Hgrey = 170; skillText[4] = "Briarthorn, Swiftthistle"; end
-			if skillText[1] == "Stranglekelp" then Horange = 85; Hyellow = 110; Hgreen = 135; Hgrey = 185; skillText[4] = "Stranglekelp"; end
-			if skillText[1] == "Bruiseweed" then Horange = 100; Hyellow = 125; Hgreen = 150; Hgrey = 200; skillText[4] = "Bruiseweed"; end
-			if skillText[1] == "Wild Steelbloom" then Horange = 115; Hyellow = 140; Hgreen = 165; Hgrey = 215; skillText[4] = "Wild Steelbloom"; end
-			if skillText[1] == "Grave Moss" then Horange = 120; Hyellow = 150; Hgreen = 170; Hgrey = 220; skillText[4] = "Grave Moss"; end
-			if skillText[1] == "Kingsblood" then Horange = 125; Hyellow = 155; Hgreen = 175; Hgrey = 225; skillText[4] = "Kingsblood"; end
-			if skillText[1] == "Liferoot" then Horange = 150; Hyellow = 175; Hgreen = 200; Hgrey = 250; skillText[4] = "Liferoot"; end
-			if skillText[1] == "Fadeleaf" then Horange = 160; Hyellow = 185; Hgreen = 210; Hgrey = 260; skillText[4] = "Fadeleaf"; end
-			if skillText[1] == "Goldthorn" then Horange = 170; Hyellow = 195; Hgreen = 220; Hgrey = 270; skillText[4] = "Goldthorn"; end
-			if skillText[1] == "Khadgar's Whisker" then Horange = 185; Hyellow = 210; Hgreen = 235; Hgrey = 285; skillText[4] = "Khadgar's Whisker"; end
-			if skillText[1] == "Wintersbite" then Horange = 195; Hyellow = 225; Hgreen = 245; Hgrey = 295; skillText[4] = "Wintersbite"; end
-			if skillText[1] == "Firebloom" then Horange = 205; Hyellow = 235; Hgreen = 255; Hgrey = 305; skillText[4] = "Firebloom"; end
-			if skillText[1] == "Purple Lotus" then Horange = 210; Hyellow = 235; Hgreen = 260; Hgrey = 310; skillText[4] = "Purple Lotus, Wildvine"; end
-			if skillText[1] == "Arthas' Tears" then Horange = 220; Hyellow = 250; Hgreen = 270; Hgrey = 320; skillText[4] = "Arthas' Tears"; end
-			if skillText[1] == "Sungrass" then Horange = 230; Hyellow = 255; Hgreen = 280; Hgrey = 330; skillText[4] = "Sungrass"; end
-			if skillText[1] == "Blindweed" then Horange = 235; Hyellow = 260; Hgreen = 285; Hgrey = 335; skillText[4] = "Blindweed"; end
-			if skillText[1] == "Ghost Mushroom" then Horange = 245; Hyellow = 270; Hgreen = 295; Hgrey = 345; skillText[4] = "Ghost Mushroom"; end
-			if skillText[1] == "Gromsblood" then Horange = 250; Hyellow = 275; Hgreen = 300; Hgrey = 350; skillText[4] = "Gromsblood"; end
-			if skillText[1] == "Golden Sansam" then Horange = 260; Hyellow = 280; Hgreen = 310; Hgrey = 360; skillText[4] = "Golden Sansam"; end
-			if skillText[1] == "Dreamfoil" then Horange = 270; Hyellow = 295; Hgreen = 320; Hgrey = 370; skillText[4] = "Dreamfoil"; end
-			if skillText[1] == "Mountain Silversage" then Horange = 280; Hyellow = 310; Hgreen = 330; Hgrey = 380; skillText[4] = "Mountain Silversage"; end
-			if skillText[1] == "Plaguebloom" then Horange = 285; Hyellow = 315; Hgreen = 335; Hgrey = 385; skillText[4] = "Plaguebloom"; end
-			if skillText[1] == "Icecap" then Horange = 290; Hyellow = 315; Hgreen = 340; Hgrey = 390; skillText[4] = "Icecap"; end
-			if skillText[1] == "Black Lotus" then Horange = 300; Hyellow = 345; Hgreen = 399; Hgrey = 400; skillText[4] = "Black Lotus"; end
-			--Outlands
-			if skillText[1] == "Felweed" then Horange = 300; Hyellow = 325; Hgreen = 350; Hgrey = 400; skillText[4] = "Felweed, Mote of Life, Fel Blossom, Fel Lotus"; end
-			if skillText[1] == "Dreaming Glory" then Horange = 315; Hyellow = 340; Hgreen = 365; Hgrey = 415; skillText[4] = "Dreaming Glory, Mote of Life, Fel Lotus"; end
-			if skillText[1] == "Ragveil" then Horange = 325; Hyellow = 350; Hgreen = 400; Hgrey = 425; skillText[4] = "Ragveil, Mote of Life, Fel Lotus"; end
-			if skillText[1] == "Flame Cap" then Horange = 335; Hyellow = 350; Hgreen = 410; Hgrey = 435; skillText[4] = "Flame Cap, Fel Lotus"; end
-			if skillText[1] == "Terocone" then Horange = 325; Hyellow = 350; Hgreen = 415; Hgrey = 425; skillText[4] = "Terocone, Mote of Life, Fel Lotus"; end
-			if skillText[1] == "Ancient Lichen" then Horange = 340; Hyellow = 438; Hgreen = 439; Hgrey = 440; skillText[4] = "Ancient Lichen, Fel Lotus"; end
-			if skillText[1] == "Netherbloom" then Horange = 350; Hyellow = 375; Hgreen = 400; Hgrey = 450; skillText[4] = "Netherbloom, Mote of Mana, Fel Lotus"; end
-			if skillText[1] == "Netherdust Bush" then Horange = 350; Hyellow = 390; Hgreen = 400; Hgrey = 450; skillText[4] = "Netherdust Pollen, Mote of Mana, Fel Lotus"; end
-			if skillText[1] == "Nightmare Vine" then Horange = 365; Hyellow = 390; Hgreen = 415; Hgrey = 465; skillText[4] = "Nightmare Vine, Nightmare Seed, Fel Lotus"; end
-			if skillText[1] == "Mana Thistle" then Horange = 375; Hyellow = 415; Hgreen = 425; Hgrey = 475; skillText[4] = "Mana Thistle, Mote of Life, Fel Lotus"; end
-			--Northrend
-			if skillText[1] == "Goldclover" then Horange = 350; Hyellow = 380; Hgreen = 420; Hgrey = 450; skillText[4] = "Goldclover, Deadnettle, Crystallized Life, Frost Lotus"; end
-			if skillText[1] == "Firethorn" then Horange = 360; Hyellow = 385; Hgreen = 450; Hgrey = 460; skillText[4] = "Fire Leaf, Fire Seed, Crystallized Life, Frost Lotus"; end
-			if skillText[1] == "Tiger Lily" then Horange = 375; Hyellow = 400; Hgreen = 450; Hgrey = 475; skillText[4] = "Tiger Lily, Deadnettle, Crystallized Life, Frost Lotus"; end
-			if skillText[1] == "Talandra's Rose" then Horange = 385; Hyellow = 405; Hgreen = 450; Hgrey = 485; skillText[4] = "Talandra's Rose, Deadnettle, Crystallized Life, Frost Lotus"; end
-			if skillText[1] == "Frozen Herb" then Horange = 415; Hyellow = 425; Hgreen = 450; Hgrey = 515; skillText[4] = "Goldclover, Talandra's Rose, Tiger Lily"; end
-			if skillText[1] == "Adder's Tongue" then Horange = 400; Hyellow = 415; Hgreen = 450; Hgrey = 500; skillText[4] = "Adder's Tongue, Crystallized Life, Frost Lotus"; end
-			if skillText[1] == "Lichbloom" then Horange = 425; Hyellow = 435; Hgreen = 450; Hgrey = 525; skillText[4] = "Lichbloom, Crystallized Life, Frost Lotus"; end
-			if skillText[1] == "Icethorn" then Horange = 435; Hyellow = 445; Hgreen = 450; Hgrey = 535; skillText[4] = "Icethorn, Crystallized Life, Frost Lotus"; end
-			if skillText[1] == "Frost Lotus" then Horange = 450; Hyellow = 451; Hgreen = 451; Hgrey = 550; skillText[4] = "Deadnettle, Crystallized Life, Frost Lotus"; end
-			--Cataclysm
-			if skillText[1] == "Cinderbloom" then Horange = 425; Hyellow = 450; Hgreen = 475; Hgrey = 500; skillText[4] = ""; end
-			if skillText[1] == "Stormvine" then Horange = 425; Hyellow = 450; Hgreen = 475; Hgrey = 500; skillText[4] = ""; end
-			if skillText[1] == "Azshara's Veil" then Horange = 425; Hyellow = 450; Hgreen = 475; Hgrey = 500; skillText[4] = ""; end
-			if skillText[1] == "Heartblossom" then Horange = 475; Hyellow = 500; Hgreen = 525; Hgrey = 525; skillText[4] = ""; end
-			if skillText[1] == "Whiptail" then Horange = 500; Hyellow = 525; Hgreen = 525; Hgrey = 525; skillText[4] = ""; end
-			if skillText[1] == "Twilight Jasmine" then Horange = 525; Hyellow = 525; Hgreen = 525; Hgrey = 525; skillText[4] = ""; end
-			--Pandaria
-			if skillText[1] == "Fool's Cap" then Horange = 600; Hyellow = 600; Hgreen = 600; Hgrey = 600; skillText[4] = ""; end
-			if skillText[1] == "Golden Lotus" then Horange = 550; Hyellow = 575; Hgreen = 600; Hgrey = 600; skillText[4] = ""; end
-			if skillText[1] == "Green Tea Leaf" then Horange = 500; Hyellow = 525; Hgreen = 550; Hgrey = 575; skillText[4] = ""; end
-			if skillText[1] == "Rain Poppy" then Horange = 525; Hyellow = 550; Hgreen = 575; Hgrey = 600; skillText[4] = ""; end
-			if skillText[1] == "Sha-Touched Herb" then Horange = 575; Hyellow = 600; Hgreen = 600; Hgrey = 600; skillText[4] = ""; end
-			if skillText[1] == "Silkweed" then Horange = 545; Hyellow = 550; Hgreen = 575; Hgrey = 600; skillText[4] = ""; end
-			if skillText[1] == "Snow Lily" then Horange = 575; Hyellow = 600; Hgreen = 600; Hgrey = 600; skillText[4] = ""; end
-
-			--====Rogue Lockpick====
-			--Old World
-				--crafted
-			if skillText[1] == "Practice Lock" then Horange = 1; Hyellow = 30; Hgreen = 60; Hgrey = 80; skillText[4] = "Nothing :("; end
-				--junkboxes
-			if skillText[1] == "Battered Junkbox" then Horange = 1; Hyellow = 30; Hgreen = 75; Hgrey = 20; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Worn Junkbox" then Horange = 75; Hyellow = 100; Hgreen = 120; Hgrey = 20; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Sturdy Junkbox" then Horange = 175; Hyellow = 200; Hgreen = 225; Hgrey = 35; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Heavy Junkbox" then Horange = 250; Hyellow = 275; Hgreen = 300; Hgrey = 50; skillText[4] = "(stuff)"; end
-				-- lockboxes (mob drops) - Hgrey is required player level!
-			if skillText[1] == "Ornate Bronze Lockbox" then Horange = 1; Hyellow = 1; Hgreen = 50; Hgrey = 20; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Heavy Bronze Lockbox" then Horange = 25; Hyellow = 50; Hgreen = 75; Hgrey = 20; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Iron Lockbox" then Horange = 70; Hyellow = 95; Hgreen = 120; Hgrey = 20; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Strong Iron Lockbox" then Horange = 125; Hyellow = 150; Hgreen = 175; Hgrey = 25; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Steel Lockbox" then Horange = 175; Hyellow = 205; Hgreen = 225; Hgrey = 35; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Reinforced Steel Lockbox" then Horange = 225; Hyellow = 250; Hgreen = 275; Hgrey = 45; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Mithril Lockbox" then Horange = 225; Hyellow = 250; Hgreen = 275; Hgrey = 50; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Thorium Lockbox" then Horange = 225; Hyellow = 250; Hgreen = 275; Hgrey = 50; skillText[4] = "(stuff)"; end
-				--locked chests (fishing)
-			if skillText[1] == "Lockbox" then Horange = 1; Hyellow = 300; Hgreen = 300; Hgrey = 300; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Lockbox" then Horange = 70; Hyellow = 300; Hgreen = 300; Hgrey = 300; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Lockbox" then Horange = 175; Hyellow = 300; Hgreen = 300; Hgrey = 300; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Lockbox" then Horange = 250; Hyellow = 300; Hgreen = 300; Hgrey = 300; skillText[4] = "(stuff)"; end
-				--footlockers
-					--there's several repeated footlockers throughout the world...so data isn't 100% accurate
-						--waterlogged, battered, mossy, dented
-			if skillText[1] == "Burial Chest" then Horange = 1; Hyellow = 30; Hgreen = 55; Hgrey = 100; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Primitive Chest" then Horange = 20; Hyellow = 30; Hgreen = 55; Hgrey = 100; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Practice Lockbox" then Horange = 1; Hyellow = 30; Hgreen = 55; Hgrey = 100; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Buccaneer's Strongbox" then Horange = 1; Hyellow = 30; Hgreen = 55; Hgrey = 100; skillText[4] = "(stuff)"; end
-			if skillText[1] == "The Jewel of the Southsea" then Horange = 25; Hyellow = 30; Hgreen = 75; Hgrey = 125; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Waterlogged Footlocker" then Horange = 70; Hyellow = 95; Hgreen = 120; Hgrey = 150; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Gallywix's Lockbox" then Horange = 70; Hyellow = 100; Hgreen = 120; Hgrey = 170; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Duskwood Chest" then Horange = 70; Hyellow = 100; Hgreen = 120; Hgrey = 170; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Battered Footlocker" then Horange = 110; Hyellow = 135; Hgreen = 160; Hgrey = 175; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Mossy Footlocker" then Horange = 175; Hyellow = 200; Hgreen = 225; Hgrey = 250; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Dented Footlocker" then Horange = 175; Hyellow = 200; Hgreen = 225; Hgrey = 250; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Scarlet Footlocker" then Horange = 250; Hyellow = 275; Hgreen = 300; Hgrey = 350; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Wicker Chest" then Horange = 300; Hyellow = 325; Hgreen = 350; Hgrey = 400; skillText[4] = "(stuff)"; end
-				--treasure chests
-			if skillText[1] == "Large Iron Bound Chest" then Horange = 25; Hyellow = 50; Hgreen = 75; Hgrey = 105; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Large Mithril Bound Chest" then Horange = 175; Hyellow = 200; Hgreen = 225; Hgrey = 225; skillText[4] = "(stuff)"; end
-			--if skillText[1] == "Large Mithril Bound Chest" then Horange = 250; Hyellow = 275; Hgreen = 300; Hgrey = 350; skillText[4] = "(stuff)"; end
-				--doors
-			if skillText[1] == "Gate" then Horange = 1; Hyellow = 30; Hgreen = 55; Hgrey = 100; skillText[4] = ""; end
-			if skillText[1] == "Workshop Door" then Horange = 150; Hyellow = 175; Hgreen = 200; Hgrey = 250; skillText[4] = ""; end
-			if skillText[1] == "Armory Door" then Horange = 175; Hyellow = 200; Hgreen = 225; Hgrey = 275; skillText[4] = ""; end
-			if skillText[1] == "Cathedral Door" then Horange = 175; Hyellow = 200; Hgreen = 225; Hgrey = 275; skillText[4] = ""; end
-			if skillText[1] == "Searing Gorge Gate" then Horange = 225; Hyellow = 250; Hgreen = 275; Hgrey = 350; skillText[4] = ""; end
-			if skillText[1] == "East Garrison Door" then Horange = 250; Hyellow = 275; Hgreen = 300; Hgrey = 350; skillText[4] = ""; end
-			if skillText[1] == "Prison Cell" then Horange = 225; Hyellow = 250; Hgreen = 300; Hgrey = 350; skillText[4] = ""; end
-			if skillText[1] == "Shadowforge Gate" then Horange = 250; Hyellow = 275; Hgreen = 300; Hgrey = 350; skillText[4] = ""; end
-			if skillText[1] == "Shadowforge Mechanism" then Horange = 250; Hyellow = 275; Hgreen = 300; Hgrey = 350; skillText[4] = ""; end
-			if skillText[1] == "Scholomance Door" then Horange = 280; Hyellow = 325; Hgreen = 340; Hgrey = 350; skillText[4] = ""; end
-			if skillText[1] == "Stratholme Gate" then Horange = 300; Hyellow = 325; Hgreen = 340; Hgrey = 350; skillText[4] = ""; end
-			if skillText[1] == "Crescent Door" then Horange = 300; Hyellow = 325; Hgreen = 400; Hgrey = 400; skillText[4] = ""; end
-			--Outlands
-				--junkboxes
-			if skillText[1] == "Strong Junkbox" then Horange = 300; Hyellow = 325; Hgreen = 350; Hgrey = 60; skillText[4] = "(stuff)"; end
-				--lockboxes (mob drops)
-			if skillText[1] == "Eternium Lockbox" then Horange = 225; Hyellow = 265; Hgreen = 320; Hgrey = 50; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Khorium Lockbox" then Horange = 325; Hyellow = 350; Hgreen = 450; Hgrey = 65; skillText[4] = "(stuff)"; end
-				--treasure chests
-			if skillText[1] == "Bound Fel Iron Chest" then Horange = 300; Hyellow = 325; Hgreen = 350; Hgrey = 400; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Bound Adamantite Chest" then Horange = 325; Hyellow = 350; Hgreen = 375; Hgrey = 450; skillText[4] = "(stuff)"; end
-			--if skillText[1] == "Bound Adamantite Chest" then Horange = 350; Hyellow = 375; Hgreen = 400; Hgrey = 450; skillText[4] = "(stuff)"; end
-				--doors
-			if skillText[1] == "Shattered Halls Door" then Horange = 350; Hyellow = 375; Hgreen = 400; Hgrey = 425; skillText[4] = ""; end
-			if skillText[1] == "Shadow Labyrinth Gate" then Horange = 350; Hyellow = 375; Hgreen = 400; Hgrey = 450; skillText[4] = ""; end
-			if skillText[1] == "Arcatraz Door" then Horange = 350; Hyellow = 375; Hgreen = 400; Hgrey = 450; skillText[4] = ""; end
-			--Northrend
-				--junkboxes
-			if skillText[1] == "Reinforced Junkbox" then Horange = 350; Hyellow = 375; Hgreen = 450; Hgrey = 70; skillText[4] = "(stuff)"; end
-				--lockboxes (mob drops)
-			if skillText[1] == "Froststeel Lockbox" then Horange = 375; Hyellow = 450; Hgreen = 450; Hgrey = 75; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Titanium Lockbox" then Horange = 400; Hyellow = 450; Hgreen = 450; Hgrey = 80; skillText[4] = "(stuff)"; end
-			if skillText[1] == "Tiny Titanium Lockbox" then Horange = 400; Hyellow = 450; Hgreen = 450; Hgrey = 80; skillText[4] = "(stuff)"; end
-				--doors
-			if skillText[1] == "Kharazhan Door" then Horange = 350; Hyellow = 375; Hgreen = 400; Hgrey = 450; skillText[4] = ""; end
-			if skillText[1] == "Violet Hold Door" then Horange = 365; Hyellow = 400; Hgreen = 450; Hgrey = 450; skillText[4] = ""; end
-			--Cataclysm
-				--junkboxes
-			if skillText[1] == "FLame-Scarred Junkbox" then Horange = 350; Hyellow = 375; Hgreen = 450; Hgrey = 80; skillText[4] = "(stuff)"; end
-				--lockboxes (mob drops)
-			if skillText[1] == "Elementium Lockbox" then Horange = 425; Hyellow = 450; Hgreen = 450; Hgrey = 85; skillText[4] = "(stuff)"; end
-			--Pandaria
-				--junkboxes
-			if skillText[1] == "Vine-Cracked Junkbox" then Horange = 350; Hyellow = 375; Hgreen = 450; Hgrey = 90; skillText[4] = "(stuff)"; end
-				--lockboxes (mob drops)
-			if skillText[1] == "Ghost Iron Lockbox" then Horange = 450; Hyellow = 450; Hgreen = 450; Hgrey = 90; skillText[4] = "(stuff)"; end
-			
+			-- load info from database
+			if skillWatcher_data[skillText[1]] ~= nil then
+				Horange = skillWatcher_data[skillText[1]]["min"];
+				Hyellow = skillWatcher_data[skillText[1]]["low"];
+				Hgreen = skillWatcher_data[skillText[1]]["high"];
+				Hgrey = skillWatcher_data[skillText[1]]["max"];
+				skillText[4] = skillWatcher_data[skillText[1]]["text"];
+			end
 
 			--Read "require" off node
 			if skillText[2] == "Herbalism" then
@@ -547,16 +335,10 @@ Version History
 				end
 			elseif skillText[2] == "Prospectable" then
 				skillText[4] = "(SkillWatcher: Not in database! 'Prospectable')";
-				if skillText[1] == "Copper Ore" then skillText[4] = "Common: Tigerseye, Malachite"; end
-				if skillText[1] == "Tin Ore" then skillText[4] = "Common: Shadowgem, Lesser Moonstone, Moss Agate"; end
-				if skillText[1] == "Iron Ore" then skillText[4] = "Common: Citrine, Lesser Moonstone, Jade"; end
-				if skillText[1] == "Mithril Ore" then skillText[4] = "Common: Citrine, Star Ruby, Aquamarine"; end
-				if skillText[1] == "Thorium Ore" then skillText[4] = "Common: Star Ruby, Large Opal, Blue Sapphire, Huge Emerald, Azerothian Diamond"; end
-				if skillText[1] == "Fel Iron Ore" then skillText[4] = "Common: Tigerseye, Malachite"; end
-				if skillText[1] == "Adamantite Ore" then skillText[4] = "Common: Blood Garnet, Flame Spessarite, Golden Draenite, Deep Peridot, Azure Moonstone, Shadow Draenite"; end
-				if skillText[1] == "Cobalt Ore" then skillText[4] = "Common: Bloodstone, Huge Citrine, Sun Crystal, Dark Jade, Chalcedony, Shadow Crystal"; end
-				if skillText[1] == "Saronite Ore" then skillText[4] = "Common: Bloodstone, Huge Citrine, Sun Crystal, Dark Jade, Chalcedony, Shadow Crystal"; end
-				if skillText[1] == "Titanium Ore" then skillText[4] = "Common: Bloodstone, Huge Citrine, Sun Crystal, Dark Jade, Chalcedony, Shadow Crystal"; end
+				-- load info from database
+				if skillWatcher_data_prospect[skillText[1]] ~= nil then
+					skillText[4] = skillWatcher_data_prospect[skillText[1]]["text"];
+				end
 			else 
 				--some other node!?
 				skillText[3] = "NOTVALID"
@@ -1134,7 +916,7 @@ Version History
 							["show"] = 1
 							};
 					end
-					frameHeight = frameHeight + 12
+					frameHeight = frameHeight + 11
 					--Format text line for info window
 					textThing = textThing .. "|cffffd000|H" .. skillName .. "|h["..skillName.."]|h|r \n"
 				end
@@ -1266,7 +1048,7 @@ Version History
 							if tradeName == name and rank < maxrank and rank > 0 then
 								cookingName = skillName.gsub(cookingName, "Way of the ", "")
 								cookingText = cookingText .. " * " .. cookingName .. " " .. rank .. "/" .. maxrank .. "|r\n"
-								cookingSize = cookingSize + 10
+								cookingSize = cookingSize + 11
 								break
 							end
 						end
@@ -1402,7 +1184,7 @@ Version History
 					end
 
 					--frame height determined by font size * lines
-					frameHeight = frameHeight + 12
+					frameHeight = frameHeight + 11
 				end
 			end
 			end

@@ -12,13 +12,44 @@ Common format
 		- max (grey), maximum skill to still get a point up
 		- text, common "drops" from the node.  Uncommon/rares aren't listed since the tooltip text could get very large
 
-	Note that a decent percent of this database is empty since this stuff isn't known / not researched fully / hard to info
+	Note that some of the data in here is inaccurate: stuff isn't known / not researched fully / hard to info
 		- if you contribute data, you get your name commented on the respective line!  yay!  you're helping!
 
 --]]
 
 
-local skillWatcher_data = {
+--==== Prospecting Table, just shows what is lootable from ores ====--
+skillWatcher_data_prospect = {
+		-- Vanilla
+	["Copper Ore"] 						= { text = "Common: Tigerseye, Malachite"},
+	["Tin Ore"] 						= { text = "Common: Shadowgem, Lesser Moonstone, Moss Agate"},
+	["Iron Ore"] 						= { text = "Common: Citrine, Lesser Moonstone, Jade"},
+	["Mithril Ore"] 					= { text = "Common: Citrine, Star Ruby, Aquamarine"},
+	["Thorium Ore"] 					= { text = "Common: Star Ruby, Large Opal, Blue Sapphire, Huge Emerald, Azerothian Diamond"},
+		-- Outlands
+	["Fel Iron Ore"] 					= { text = "Common: Tigerseye, Malachite"},
+	["Adamantite Ore"] 					= { text = "Common: Blood Garnet, Flame Spessarite, Golden Draenite, Deep Peridot, Azure Moonstone, Shadow Draenite"},
+		-- Northrend
+	["Cobalt Ore"] 						= { text = "Common: Bloodstone, Huge Citrine, Sun Crystal, Dark Jade, Chalcedony, Shadow Crystal"},
+	["Saronite Ore"] 					= { text = "Common: Bloodstone, Huge Citrine, Sun Crystal, Dark Jade, Chalcedony, Shadow Crystal"},
+	["Titanium Ore"] 					= { text = "Common: Bloodstone, Huge Citrine, Sun Crystal, Dark Jade, Chalcedony, Shadow Crystal"},
+		-- Cataclysm
+	["Obsidium Ore"]					= { text = "Common: Zephyrite, Nightstone, Alicite, Jasper, Carnelian, Hessonite"},
+	["Elementium Ore"]					= { text = "Common: Zephyrite, Nightstone, Alicite, Jasper, Carnelian, Hessonite"},
+	["Pyrite Ore"]						= { text = "Volatile Earth, Common: Zephyrite, Nightstone, Alicite, Jasper, Carnelian, Hessonite"},
+		-- Pandaria
+	["Ghost Iron Ore"]					= { text = "Common: Pandarian Garnet, Lapis Lazuli, Sunstone, Alexandrite, Roguestone, Tiger Opal, Sparkling Shard"},
+	["Kyparite"]						= { text = "Common: Pandarian Garnet, Lapis Lazuli, Sunstone, Alexandrite, Roguestone, Tiger Opal, Sparkling Shard"}, 
+	["Black Trillium Ore"]				= { text = "Common: Sparkling Shard, Uncommon: 15-20% random"},
+	["White Trillium Ore"]				= { text = "Common: Sparkling Shard, Uncommon: 15-20% random"},
+		-- Warlords
+	["True Iron Ore"]					= { text = "Common: "},
+	["Black Iron Ore"]					= { text = "Common: "},
+}
+
+
+--==== Standard Database of errything ====--
+skillWatcher_data = {
 	--====Mining====--
 		-- Vanilla
 	["Copper Vein"]						= { min = 1,	low = 25,	high = 50,	max = 100,	text = "Copper Ore, Rough Stone"},
@@ -49,13 +80,14 @@ local skillWatcher_data = {
 	["Rich Adamantite Deposit"] 		= { min = 350,	low = 375,	high = 400,	max = 401,	text = "Adamantite Ore, Mote of Earth, Eternium Ore"},
 	["Nethercite Ore"] 					= { min = 300,	low = 401,	high = 401,	max = 401,	text = "Nethercite Ore, More of Earth/Fire, Eternium Ore"},
 	["Khorium Vein"] 					= { min = 375,	low = 400,	high = 401,	max = 401,	text = "Khorium Ore, Mote of Earth/Fire, Eternium Ore"},
-	["Ancient Gem Vein"] 				= { min = 375,	low = 401,	high = 401,	max = 401,	text = ""},
+	["Ancient Gem Vein"] 				= { min = 375,	low = 401,	high = 401,	max = 401,	text = "Random Epic Gem"},
 		--Northrend
 	["Cobalt Deposit"] 					= { min = 350,	low = 375,	high = 400,	max = 450,	text = "Cobalt Ore, Crystallized Earth/Water"},
 	["Rich Cobalt Deposit"] 			= { min = 375,	low = 451,	high = 451,	max = 451,	text = "Cobalt Ore, Crystallized Earth/Water"},
 	["Saronite Deposit"] 				= { min = 400,	low = 425,	high = 451,	max = 451,	text = "Saronite Ore, Crystallized Earth/Shadow"},
 	["Rich Saronite Deposit"] 			= { min = 425,	low = 450,	high = 451,	max = 451,	text = "Saronite Ore, Crystallized Earth/Shadow"},
-	["Titanium Deposit"] 				= { min = 450,	low = 451,	high = 451,	max = 451,	text = "Saronite Ore, Crystallized Earth/Fire/Water/Air"},
+	["Titanium Vein"]	 				= { min = 450,	low = 451,	high = 451,	max = 451,	text = "Titanium Ore, Crystallized Earth/Fire/Water/Air"},
+	["Pure Saronite Deposit"] 			= { min = 450,	low = 451,	high = 451,	max = 451,	text = "Saronite Ore, Random Gems"},
 		--Cataclysm
 	["Obsidium Deposit"] 				= { min = 425,	low = 450,	high = 475,	max = 500,	text = "Obsidium Ore"},
 	["Rich Obsidium Deposit"] 			= { min = 450,	low = 475,	high = 500,	max = 525,	text = "Obsidium Ore"},
@@ -71,10 +103,14 @@ local skillWatcher_data = {
 	["Trillium Vein"] 					= { min = 600,	low = 600,	high = 600,	max = 600,	text = "White or Black Trillium Ore"},
 	["Rich Trillium Vein"] 				= { min = 600,	low = 600,	high = 600,	max = 600,	text = "White or Black Trillium Ore"},
 		--Warlords
+	["True Iron Deposit"]				= { min = 600,	low = 625,	high = 650,	max = 675,	text = "True Iron Ore, Draenic Stone"},
+	["Rich True Iron Deposit"]			= { min = 600,	low = 625,	high = 650,	max = 675,	text = "True Iron Ore, Draenic Stone"},
+	["Black Iron Deposit"]				= { min = 600,	low = 625,	high = 650,	max = 675,	text = "Black Iron Ore, Draenic Stone"},
+	["Rich Black Iron Deposit"]				= { min = 600,	low = 625,	high = 650,	max = 675,	text = "Black Iron Ore, Draenic Stone"},
 
 
 	--====Herbalism====--
-			--Vanilla
+		--Vanilla
 	["Peacebloom"] 						= { min = 1,	low = 25,	high = 50,	max = 100,	text = "Peacebloom"},
 	["Silverleaf"] 						= { min = 1,	low = 25,	high = 50,	max = 100,	text = "Silverleaf"},
 	["Bloodthistle"] 					= { min = 1,	low = 25,	high = 50,	max = 100,	text = "Bloodthistle"},
@@ -104,7 +140,7 @@ local skillWatcher_data = {
 	["Plaguebloom"] 					= { min = 285,	low = 315,	high = 335,	max = 385,	text = "Plaguebloom"},
 	["Icecap"] 							= { min = 290,	low = 315,	high = 340,	max = 390,	text = "Icecap"},
 	["Black Lotus"] 					= { min = 300,	low = 345,	high = 399,	max = 400,	text = "Black Lotus"},
-			--Outlands
+		--Outlands
 	["Felweed"] 						= { min = 300,	low = 325,	high = 350,	max = 400,	text = "Felweed, Mote of Life, Fel Blossom, Fel Lotus"},
 	["Dreaming Glory"] 					= { min = 315,	low = 340,	high = 365,	max = 415,	text = "Dreaming Glory, Mote of Life, Fel Lotus"},
 	["Ragveil"] 						= { min = 325,	low = 350,	high = 400,	max = 425,	text = "Ragveil, Mote of Life, Fel Lotus"},
@@ -115,7 +151,7 @@ local skillWatcher_data = {
 	["Netherdust Bush"] 				= { min = 350,	low = 390,	high = 400,	max = 450,	text = "Netherdust Pollen, Mote of Mana, Fel Lotus"},
 	["Nightmare Vine"] 					= { min = 365,	low = 390,	high = 415,	max = 465,	text = "Nightmare Vine, Nightmare Seed, Fel Lotus"},
 	["Mana Thistle"] 					= { min = 375,	low = 415,	high = 425,	max = 475,	text = "Mana Thistle, Mote of Life, Fel Lotus"},
-			--Northrend
+		--Northrend
 	["Goldclover"] 						= { min = 350,	low = 380,	high = 420,	max = 450,	text = "Goldclover, Deadnettle, Crystallized Life, Frost Lotus"},
 	["Firethorn"] 						= { min = 360,	low = 385,	high = 450,	max = 460,	text = "Fire Leaf, Fire Seed, Crystallized Life, Frost Lotus"},
 	["Tiger Lily"] 						= { min = 375,	low = 400,	high = 450,	max = 475,	text = "Tiger Lily, Deadnettle, Crystallized Life, Frost Lotus"},
@@ -125,32 +161,40 @@ local skillWatcher_data = {
 	["Lichbloom"] 						= { min = 425,	low = 435,	high = 450,	max = 525,	text = "Lichbloom, Crystallized Life, Frost Lotus"},
 	["Icethorn"] 						= { min = 435,	low = 445,	high = 450,	max = 535,	text = "Icethorn, Crystallized Life, Frost Lotus"},
 	["Frost Lotus"] 					= { min = 450,	low = 451,	high = 451,	max = 550,	text = "Deadnettle, Crystallized Life, Frost Lotus"},
-			--Cataclysm
-	["Cinderbloom"] 					= { min = 425,	low = 450,	high = 475,	max = 500,	text = ""},
-	["Stormvine"] 						= { min = 425,	low = 450,	high = 475,	max = 500,	text = ""},
-	["Azshara's Veil"] 					= { min = 425,	low = 450,	high = 475,	max = 500,	text = ""},
-	["Heartblossom"] 					= { min = 475,	low = 500,	high = 525,	max = 525,	text = ""},
-	["Whiptail"] 						= { min = 500,	low = 525,	high = 525,	max = 525,	text = ""},
-	["Twilight Jasmine"] 				= { min = 525,	low = 525,	high = 525,	max = 525,	text = ""},
-			--Pandaria
-	["Fool's Cap"] 						= { min = 600,	low = 600,	high = 600,	max = 600,	text = ""},
-	["Golden Lotus"] 					= { min = 550,	low = 575,	high = 600,	max = 600,	text = ""},
-	["Green Tea Leaf"] 					= { min = 500,	low = 525,	high = 550,	max = 575,	text = ""},
-	["Rain Poppy"] 						= { min = 525,	low = 550,	high = 575,	max = 600,	text = ""},
-	["Sha-Touched Herb"] 				= { min = 575,	low = 600,	high = 600,	max = 600,	text = ""},
-	["Silkweed"] 						= { min = 545,	low = 550,	high = 575,	max = 600,	text = ""},
-	["Snow Lily"] 						= { min = 575,	low = 600,	high = 600,	max = 600,	text = ""},
+		--Cataclysm
+	["Cinderbloom"] 					= { min = 425,	low = 450,	high = 475,	max = 500,	text = "Cinderbloom, Volatile Life, Lifegiving Seed"},
+	["Stormvine"] 						= { min = 425,	low = 450,	high = 475,	max = 500,	text = "Stormvine, Volatile Life, Livegiving Seed"},
+	["Azshara's Veil"] 					= { min = 425,	low = 450,	high = 475,	max = 500,	text = "Azshara's Veil, Volatile Life, Livegiving Seed"},
+	["Heartblossom"] 					= { min = 475,	low = 500,	high = 525,	max = 525,	text = "Heartblossom, Volatile Life, Livegiving Seed"},
+	["Whiptail"] 						= { min = 500,	low = 525,	high = 525,	max = 525,	text = "Whiptail, Volatile Life, Livegiving Seed"},
+	["Twilight Jasmine"] 				= { min = 525,	low = 525,	high = 525,	max = 525,	text = "Twilight Jasmine, Volatile Life, Livegiving Seed"},
+		--Pandaria
+	["Fool's Cap"] 						= { min = 600,	low = 600,	high = 600,	max = 600,	text = "Fool's Cap, Life Spirit, Water Spirit"},
+	["Golden Lotus"] 					= { min = 550,	low = 575,	high = 600,	max = 600,	text = "Golden Lotus, Life Spirit, Water Spirit"},
+	["Green Tea Leaf"] 					= { min = 500,	low = 525,	high = 550,	max = 575,	text = "Green Tea Leaf, Life Spirit, Water Spirit"},
+	["Rain Poppy"] 						= { min = 525,	low = 550,	high = 575,	max = 600,	text = "Rain Poppy, Life Spirit, Water Spirit"},
+	["Sha-Touched Herb"] 				= { min = 575,	low = 600,	high = 600,	max = 600,	text = "Desecrated Herb, Green Tea Leaf, Fool's Cap, Snow Lily, Golden Lotus"},
+	["Silkweed"] 						= { min = 545,	low = 550,	high = 575,	max = 600,	text = "Silkweed, Life Spirit, Water Spirit"},
+	["Snow Lily"] 						= { min = 575,	low = 600,	high = 600,	max = 600,	text = "Snow Lily, Life Spirit, Water Spirit"},
+		--Warlords
+	["Talador Orchid"] 					= { min = 600,	low = 625,	high = 650,	max = 675,	text = "Talador Orchid, Draenic Seeds"},
+	["Nagrand Arrowbloom"] 				= { min = 600,	low = 625,	high = 650,	max = 675,	text = "Nagrand Arrowbloom, Draenic Seeds"},
+	["Starflower"]	 					= { min = 600,	low = 625,	high = 650,	max = 675,	text = "Starflower, Draenic Seeds"},
+	["Gorgrond Flytrap"]				= { min = 600,	low = 625,	high = 650,	max = 675,	text = "Gorgrond Flytrap, Draenic Seeds"},
+	["Fireweed"] 						= { min = 600,	low = 625,	high = 650,	max = 675,	text = "Fireweed, Draenic Seeds"},
+	["Frostweed"] 						= { min = 600,	low = 625,	high = 650,	max = 675,	text = "Frostweed, Draenic Seeds"},
+	["Chameleon Lotus"]					= { min = 600,	low = 625,	high = 650,	max = 675,	text = "Chameleon Lotus, Draenic Seeds"},
 
 	--====Rogue Lockpick====
-			--Old World
-				--crafted
+		--Vanilla
+			--crafted
 	["Practice Lock"] 					= { min = 1,	low = 30,	high = 60,	max = 80,	text = "Nothing :("},
-				--junkboxes
+			--junkboxes
 	["Battered Junkbox"] 				= { min = 1,	low = 30,	high = 75,	max = 20,	text = "(stuff)"},
 	["Worn Junkbox"] 					= { min = 75,	low = 100,	high = 120,	max = 20,	text = "(stuff)"},
 	["Sturdy Junkbox"] 					= { min = 175,	low = 200,	high = 225,	max = 35,	text = "(stuff)"},
 	["Heavy Junkbox"] 					= { min = 250,	low = 275,	high = 300,	max = 50,	text = "(stuff)"},
-				-- lockboxes (mob drops) - max is required player level!
+			-- lockboxes (mob drops) - max is required player level!
 	["Ornate Bronze Lockbox"] 			= { min = 1,	low = 1,	high = 50,	max = 20,	text = "(stuff)"},
 	["Heavy Bronze Lockbox"] 			= { min = 25,	low = 50,	high = 75,	max = 20,	text = "(stuff)"},
 	["Iron Lockbox"] 					= { min = 70,	low = 95,	high = 120,	max = 20,	text = "(stuff)"},
@@ -159,14 +203,14 @@ local skillWatcher_data = {
 	["Reinforced Steel Lockbox"] 		= { min = 225,	low = 250,	high = 275,	max = 45,	text = "(stuff)"},
 	["Mithril Lockbox"] 				= { min = 225,	low = 250,	high = 275,	max = 50,	text = "(stuff)"},
 	["Thorium Lockbox"] 				= { min = 225,	low = 250,	high = 275,	max = 50,	text = "(stuff)"},
-				--locked chests (fishing)
+			--locked chests (fishing)
 	["Lockbox"] 						= { min = 1,	low = 300,	high = 300,	max = 300,	text = "(stuff)"},
 	["Lockbox"] 						= { min = 70,	low = 300,	high = 300,	max = 300,	text = "(stuff)"},
 	["Lockbox"] 						= { min = 175,	low = 300,	high = 300,	max = 300,	text = "(stuff)"},
 	["Lockbox"] 						= { min = 250,	low = 300,	high = 300,	max = 300,	text = "(stuff)"},
-				--footlockers
-					--there's several repeated footlockers throughout the world...so data isn't 100% accurate
-						--waterlogged, battered, mossy, dented
+			--footlockers
+				--there's several repeated footlockers throughout the world...so data isn't 100% accurate
+					--waterlogged, battered, mossy, dented
 	["Burial Chest"] 					= { min = 1,	low = 30,	high = 55,	max = 100,	text = "(stuff)"},
 	["Primitive Chest"] 				= { min = 20,	low = 30,	high = 55,	max = 100,	text = "(stuff)"},
 	["Practice Lockbox"] 				= { min = 1,	low = 30,	high = 55,	max = 100,	text = "(stuff)"},
@@ -183,7 +227,7 @@ local skillWatcher_data = {
 				--treasure chests
 	["Large Iron Bound Chest"] 			= { min = 25,	low = 50,	high = 75,	max = 105,	text = "(stuff)"},
 	["Large Mithril Bound Chest"] 		= { min = 175,	low = 200,	high = 225,	max = 225,	text = "(stuff)"},
-				--doors
+			--Doors
 	["Gate"] 							= { min = 1,	low = 30,	high = 55,	max = 100,	text = ""},
 	["Workshop Door"] 					= { min = 150,	low = 175,	high = 200,	max = 250,	text = ""},
 	["Armory Door"] 					= { min = 175,	low = 200,	high = 225,	max = 275,	text = ""},
@@ -196,38 +240,38 @@ local skillWatcher_data = {
 	["Scholomance Door"] 				= { min = 280,	low = 325,	high = 340,	max = 350,	text = ""},
 	["Stratholme Gate"] 				= { min = 300,	low = 325,	high = 340,	max = 350,	text = ""},
 	["Crescent Door"] 					= { min = 300,	low = 325,	high = 400,	max = 400,	text = ""},
-			--Outlands
-				--junkboxes
+		--Outlands
+			--junkboxes
 	["Strong Junkbox"] 					= { min = 300,	low = 325,	high = 350,	max = 60,	text = "(stuff)"},
-				--lockboxes (mob drops)
+			--lockboxes (mob drops)
 	["Eternium Lockbox"] 				= { min = 225,	low = 265,	high = 320,	max = 50,	text = "(stuff)"},
 	["Khorium Lockbox"] 				= { min = 325,	low = 350,	high = 450,	max = 65,	text = "(stuff)"},
-				--treasure chests
+			--treasure chests
 	["Bound Fel Iron Chest"] 			= { min = 300,	low = 325,	high = 350,	max = 400,	text = "(stuff)"},
 	["Bound Adamantite Chest"] 			= { min = 325,	low = 350,	high = 375,	max = 450,	text = "(stuff)"},
-				--doors
+			--Doors
 	["Shattered Halls Door"] 			= { min = 350,	low = 375,	high = 400,	max = 425,	text = ""},
 	["Shadow Labyrinth Gate"] 			= { min = 350,	low = 375,	high = 400,	max = 450,	text = ""},
 	["Arcatraz Door"] 					= { min = 350,	low = 375,	high = 400,	max = 450,	text = ""},
-			--Northrend
-				--junkboxes
+		--Northrend
+			--junkboxes
 	["Reinforced Junkbox"] 				= { min = 350,	low = 375,	high = 450,	max = 70,	text = "(stuff)"},
-				--lockboxes (mob drops)
+			--lockboxes (mob drops)
 	["Froststeel Lockbox"] 				= { min = 375,	low = 450,	high = 450,	max = 75,	text = "(stuff)"},
 	["Titanium Lockbox"] 				= { min = 400,	low = 450,	high = 450,	max = 80,	text = "(stuff)"},
 	["Tiny Titanium Lockbox"] 			= { min = 400,	low = 450,	high = 450,	max = 80,	text = "(stuff)"},
-				--doors
+			--Doors
 	["Kharazhan Door"] 					= { min = 350,	low = 375,	high = 400,	max = 450,	text = ""},
 	["Violet Hold Door"] 				= { min = 365,	low = 400,	high = 450,	max = 450,	text = ""},
-			--Cataclysm
-				--junkboxes
+		--Cataclysm
+			--junkboxes
 	["FLame-Scarred Junkbox"] 			= { min = 350,	low = 375,	high = 450,	max = 80,	text = "(stuff)"},
-				--lockboxes (mob drops)
+			--lockboxes (mob drops)
 	["Elementium Lockbox"] 				= { min = 425,	low = 450,	high = 450,	max = 85,	text = "(stuff)"},
-			--Pandaria
-				--junkboxes
+		--Pandaria
+			--junkboxes
 	["Vine-Cracked Junkbox"] 			= { min = 350,	low = 375,	high = 450,	max = 90,	text = "(stuff)"},
-				--lockboxes (mob drops)
+			--lockboxes (mob drops)
 	["Ghost Iron Lockbox"] 				= { min = 450,	low = 450,	high = 450,	max = 90,	text = "(stuff)"},
 
 }
