@@ -1,3 +1,14 @@
+NOTE: Development of this addon is currently on-hold.  This addon will not work with "LEGION 7.0.3".
+
+Status updates / To-Do list / whatever:
+
+1) ERROR: attempt to call global 'GetTradeSkillInfo' (a nil value) (SkillWatcher.lua::1097)
+	- GetTradeSkillInfo() was removed (and all similar "GetTradeSkill" functions)
+	- Figure out how C_TradeSkillUI works
+2) ERROR: attempt to perform arithmetic on field 'cursorOffest' (a nil value) (SkillWatcher.lua::1097)
+	- similarly to #1, use C_TradeSkillUI
+
+------ 
 SkillWatcher is an addon that shows a small on-screen window that displays all your current profession skill levels that can be "leveled up". On skill levelup, the info window colorizes the text of the skill, an easy visual cue to see when a skill levels up, as well as coloring the skill when it is time for training!
 
 Also, SkillWatcher replaces the tooltip for herb and mining nodes, showing the skill range to get a point, as well as common drops. Even better, for people with unlocking skills (Rogues, Blacksmith (key), Engineer (bomb)), the tooltip shows what skill level (or item) is required to unlock the door/chest/whatever.
